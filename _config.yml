@@ -25,7 +25,11 @@ relative_permalinks: false
 # Added for latex rendering
 markdown: kramdown
 kramdown:
-   math_engine: mathjax
+  input: GFM
+  hard_wrap: false
+  math_engine: null
+  smart_quotes: ["apos", "apos", "quot", "quot"]
+  syntax_highlighter: rouge
 
 plugins:
   - jekyll-last-modified-at
