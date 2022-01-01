@@ -1,1 +1,14 @@
-This is the footer. Include anything you'd like here, like a link to an <a class="internal-link" href="/about">About</a> page.
+<!-- This is the footer. Include anything you'd like here, like a link to an <a class="internal-link" href="/about">About</a> page. -->
+<script type="text/javascript">
+    $("script[type='math/tex']").replaceWith(
+      function(){
+        var tex = $(this).text();
+        return katex.renderToString(tex, {displayMode: false});
+    });
+    
+    $("script[type='math/tex; mode=display']").replaceWith(
+      function(){
+        var tex = $(this).text();
+        return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+    });
+  </script>

@@ -22,6 +22,11 @@ embed_tweets: false
 permalink:           pretty
 relative_permalinks: false
 
+# Added for latex rendering
+markdown: kramdown
+kramdown:
+   math_engine: mathjax
+
 plugins:
   - jekyll-last-modified-at
 
