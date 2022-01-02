@@ -52,6 +52,12 @@ class BidirectionalLinksGenerator < Jekyll::Generator
         )
       end
 
+      # For images
+      current_note.content = current_note.content.gsub(
+        /\!\[\[(.*?\.png)\]\]/i,
+        "<img src='/assets/img/\\1'/>"
+      )
+
       # At this point, all remaining double-bracket-wrapped words are
       # pointing to non-existing pages, so let's turn them into disabled
       # links by greying them out and changing the cursor
