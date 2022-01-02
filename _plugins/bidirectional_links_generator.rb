@@ -18,7 +18,9 @@ class BidirectionalLinksGenerator < Jekyll::Generator
         title_from_filename = File.basename(
           note_potentially_linked_to.basename,
           File.extname(note_potentially_linked_to.basename)
-        ).gsub('_', ' ').gsub('-', ' ').capitalize
+        )
+        # Commented to solve issues related to ref connections
+        # .gsub('_', ' ').gsub('-', ' ').capitalize
 
         new_href = "#{site.baseurl}#{note_potentially_linked_to.url}#{link_extension}"
         anchor_tag = "<a class='internal-link' href='#{new_href}'>\\1</a>"
@@ -27,6 +29,12 @@ class BidirectionalLinksGenerator < Jekyll::Generator
         # [[A note about cats|this is a link to the note about cats]]
         current_note.content.gsub!(
           /\[\[#{title_from_filename}\|(.+?)(?=\])\]\]/i,
+          anchor_tag
+        )
+
+        # [[cats#subtitle]]
+        current_note.content.gsub!(
+          /\[\[(#{title_from_filename})\#.*\]\]/i,
           anchor_tag
         )
 
