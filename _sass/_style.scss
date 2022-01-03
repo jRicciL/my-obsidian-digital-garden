@@ -18,11 +18,11 @@ body {
   padding: 4vh 6vw;
   overflow-x: hidden;
   color: $color-text;
-  font-size: 1rem;
+  font-size: 14px;
   max-width: 63em;
 
   @media (min-width: 820px) {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 }
 
@@ -148,4 +148,29 @@ nav {
 .invalid-link-brackets {
   color: #ccc;
   cursor: help;
+}
+
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+  position: relative;
+}
+
+ul ul::before,
+ol ul::before,
+ul ol::before,
+ol ol::before {
+  content:'';
+  border-left: 1px solid #eee;
+  position: absolute;
+}
+
+ul ul::before,
+ol ul::before,
+ul ol::before,
+ol ol::before {
+  left: -13px;
+  top: 0;
+  bottom: 0;
 }
