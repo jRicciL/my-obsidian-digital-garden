@@ -12,7 +12,7 @@ $font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
 
 body {
   box-sizing: content-box;
-  font-family: $font-notoSans;
+  font-family: $font-roboto;
   margin: 0 auto;
   line-height: 1.7;
   padding: 4vh 6vw;
@@ -175,4 +175,60 @@ ol ol::before {
   left: -13px;
   top: 0;
   bottom: 0;
+}
+
+// Marks styles
+
+mark {
+  background-color: #fde9ca;
+  display: inline-block;
+  line-height: 0.8em;
+  padding: 0em 0.2em 0.2em 0.2em;
+}
+
+// Hashtag pills
+
+.tag {
+  padding: 3px 4px;
+  font-size: 90%;
+  font-weight: 500;
+  color: #151515;
+  background-color: #ffd8d8;
+  border-radius: 4px;
+  font-family: $font-roboto;
+}
+
+.tag::first-letter {
+  font-weight: bold;
+}
+
+.tag:hover {
+  cursor: pointer;
+  background-color: #c7f7e6;
+}
+
+// Latex styles
+
+content .MathJax span {
+  color: #057995;
+}
+
+// Code inline plain text
+
+content pre {
+  font-family: $font-firaCode;
+}
+
+.language-plaintext.highlighter-rouge{
+  background-color: #e6f3f1;
+  color: #0e5e66;
+  padding: 0.1em 0.2em;
+  font-size: 90%;
+  border-radius: 3px;
+  font-family: $font-firaCode;
+}
+
+// `em` text
+content em {
+  color: #1e7185;
 }

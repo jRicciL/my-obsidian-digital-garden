@@ -9,6 +9,6 @@ end
 def format_tag(note)
   note.content.gsub!(
     /(\B#\w*[a-zA-Z]+\w*)/, 
-    "<mark>\\1</mark>"
+    "<span class='tag'>\\1</span>"
   )
 end
