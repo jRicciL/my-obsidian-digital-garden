@@ -17,11 +17,15 @@ _includes/notes_graph.json
 # Ignore DS_Store files
 **/.DS_Store
 
+# Ignore all pdf files
+**/*.pdf
+
 # From _notes folder
 _notes/.obsidian
 _notes/jupyter_notebooks
-_notes/Zorro.md
 _notes/Templates
-_notes/**Untitled.md
 _notes/*.md 
 !_notes/**.md 
+_notes/obsidian.css
+_notes/Zorro.md
+_notes/**Untitled.md
