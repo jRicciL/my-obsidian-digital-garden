@@ -29,3 +29,8 @@ _notes/*.md
 _notes/obsidian.css
 _notes/Zorro.md
 _notes/**Untitled.md
+_notes/**.txt
+# _notes/**.ipynb
+_notes/**.py
+_notes/**.html
+
