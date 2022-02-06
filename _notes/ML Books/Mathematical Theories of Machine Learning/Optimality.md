@@ -1,0 +1,4 @@
+---
+---
+
+# First order optimality condition

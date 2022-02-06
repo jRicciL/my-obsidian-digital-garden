@@ -1,0 +1,347 @@
+---
+---
+
+# Introduction to `pyspark`
+
+## Getting to know PySpark
+
+#Spark is a platform for cluster computing.
+- It lets us spread data and computation over cluster iwth multiple nodes => Separate computers
+- Each node works on its own subset of the total data. ->
+	- Data processing and computation are preformed in parallel over the nodes.
+
+Deciding whether or not use Spark:
+- *Is my data too big to work with on a single machine?*
+- *Can my calculations be easily parallelized?*
+
+### Using Spark in Python
+1. Connecting to a cluster.
+	1. The cluster commonly will be hosted on a remote machine -> connected to all nodes.
+	2. ==Master== =>the computer that manages splitting up the data and the computations
+	3. ==Workers== ==> The nodes that perform the computations.
+2. Creating a connection => ==Spark Program==
+	- `SparkConf` => Information about the application
+	- Instantiate a `SparkContext` object => The connection to the cluster. 🌏
+		- Main entry point <==> Connects the cluster with the application
+	- The `SparkSession` => The interface to the connection 💻
+
+##### Creating a Spark session
+
+```python
+# Import SparkSession from pyspark.sql
+from puspark import SparkContext, SparkConf
+from pyspark.sql import SparkSession
+
+configure = SparkConf().\
+	setAppName('name'). \
+	setMaster('ip adress')
+
+sc = SparkContext(conf = configure)
+
+# Create the Spark Session
+spark = SparkSession.builder.getOrCreate()
+```
+
+```bash
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /__ / .__/\_,_/_/ /_/\_\   version 2.3.1
+      /_/
+
+Using Python version 3.5.2 (default, Nov 23 2017 16:37:01)
+SparkSession available as 'spark'.
+```
+
+### Using DataFrames
+
+- Spark's code data structure is the ==Resilient Distributed Dataset== (RDD)
+	- It is a low level object that lets Spark split data across multiple nodes
+- The ==Sapark DataFrame== is an abstraction built on top of #RDD
+	- It was designed to behave a lot like a #SQL table.
+
+##### The catalog
+- The `SparkSession` has an attribute called `catalog` which lists all the data inside the cluster.
+
+```python
+spark.catalog.listTables()
+# This should list the available SQL like tables
+```
+
+##### Run a SQL query and pandafy it
+
+- Preform a SQL query => `.sql()`
+- Convert to a pandas DF => `.toPandas()`
+
+```python
+query = 'FROM mascotas SELECT * LIMIT 10'
+
+# Run the query
+mascotas10 = spark.sql(query)
+# Show the results
+mascotas10.show()
+# Convert to a Pandas DF
+mascotas10.toPandas()
+```
+
+##### Put a Pandas DataFrame to the cluster
+
+- Use of the `SparkSession.crateDataFrame()`
+- ![[Captura de Pantalla 2021-03-05 a la(s) 19.21.46.png]]
+
+```python
+# Having `spark` as the session
+df_temp = pd.read_csv('my_data.csv') # Locally stored
+
+# Create a sparkDataFrame =>
+spark_temp = spark.createDataFrame(df_temp) # locally stored
+
+# Add the table to the catalog => name temp
+spark_temp.createOrReplaceTempview('temp')
+
+# Examine the tables in the catalog
+print(spark.catalog.listTables())
+```
+
+##### Reading data directly to Spark
+- We can avoid using Pandas and directly load data to spark => `SparkSession.read.csv()`
+
+```python
+# Don't change this file path
+file_path = "/usr/local/share/datasets/airports.csv"
+
+# Read in the airports data
+airports = spark.read.csv(file_path, header=True)
+
+# Show the data
+print(airports.show())
+```
+
+
+## Manipulating data
+
+##### Creating columns
+- Column wise operations => `.withColumn()` method of the `DataFrame` class of Spark.
+	- it takes two arguments -> the naw of the column and the column itself
+
+```python
+# Create the DataFrame flights (available in the catalog)
+flights = spark.table('flights')
+
+# Show the head
+flights.show()
+
+# Add a new column
+flights = flights.withColumn('duration_hrs', 
+							flights.air\_time / 60)
+```
+
+##### Filtering data using SQL-like queries
+- The `.filter()` method is the Spark counterpart of SQL's `WHERE`.
+
+```python
+# The following two queries produce the same output
+flights.filter("air_time > 120").show()
+
+flights.filter(flights.air_time > 120).show()
+```
+
+##### Selecting data
+- Spark: `.select()` <====> SQL: `SELECT` 
+- The difference between `withColumn()` and `.select()` is that the former returns all the columns of the DataFrame in addition to the one defined.
+
+```python
+# Define avg_speed
+avg_speed = (flights.distance/(flights.air_time/60)).alias("avg_speed")
+
+# Select the correct columns
+speed1 = flights.select("origin", "dest", "tailnum", avg_speed)
+
+# Create the same table using a SQL expression
+speed2 = flights.selectExpr("origin", "dest", "tailnum", "distance/(air_time/60) as avg_speed")
+```
+
+#### Grouping and Aggregation
+##### Grouping 
+```python
+# Find the shortest flight from PDX in terms of distance
+flights.filter(flights.origin == "PDX").groupBy().min("distance").show()
+
+# Find the longest flight from SEA in terms of air time
+flights.filter(flights.origin == "SEA").groupBy().max("air_time").show()
+```
+
+```python
+# Average duration of Delta flights
+flights.filter(flights.carrier == "DL").filter(flights.origin == "SEA").groupBy().avg("air_time").show()
+
+# Total hours in the air
+flights.withColumn("duration_hrs", flights.air_time/60).groupBy().sum("duration_hrs").show()
+```
+
+- **Pyspark** has a whole class devoted to grouped data frames: `pyspark.sql.GroupedData` <- Created by `.groupBy()`
+
+```python
+df = df.gorupBy('column')
+df.count().show()
+```
+
+##### Aggregation
+
+```python
+# Import pyspark.sql.functions as F
+import pyspark.sql.functions as F
+
+# Group by month and dest
+by_month_dest = flights.groupBy('month', 'dest')
+
+# Average departure delay by month and destination
+by_month_dest.avg('dep_delay').show()
+
+# Standard deviation of departure delay
+by_month_dest.agg(F.stddev('dep_delay')).show()
+```
+
+#### Joining
+- Another very common data operation is the *join*.
+- A join will combine two different tables along a column that they share.
+
+##### Rename a column
+```python
+df = df.withColumnRenamed('col1', 'col2')
+```
+
+```python
+# Join the DataFrames
+flights_with_airports = flights.join(airports, on = 'dest', how='leftouter')
+```
+
+## Machine Learning Pipelines
+
+### Machine Learning with `pyspark`
+
+- `pyspark.ml`
+	- `Transformer`: Have a `.transform()` method that takes a DataFrame and return a new DataFrame.
+	- `Estimator`: Implement a method `.fit()`. -> Return a model object from a DataFrame.
+
+#### Data types
+##### Casting
+```python
+# Cast the columns to integers
+model_data = model_data.withColumn("arr_delay", model_data.arr_delay.cast('integer'))
+```
+
+##### String and factors
+- `pyspark.ml.features`
+- Categorical features =>
+	- Encoding the categorical feature => `StringIndexer` -> Numerical column
+	- Encode the numeric colum as a one-hot-encoder with `OneHotEncoder`
+
+```python
+# Create a StringIndexer
+carr_indexer = StringIndexer(inputCol='carrier', outputCol='carrier_index')
+
+# Create a OneHotEncoder
+carr_encoder = OneHotEncoder(inputCol="carrier_index", outputCol="carrier_fact")
+```
+
+##### VectorAssembler
+```python
+# Make a VectorAssembler
+vec_assembler = VectorAssembler(inputCols=["month", "air_time", "carrier_fact", "dest_fact", "plane_age"], outputCol='features')
+```
+
+##### Create a Pipeline
+```python
+# Import Pipeline
+from pyspark.ml import Pipeline
+
+# Make the pipeline
+flights_pipe = Pipeline(stages=[dest_indexer, dest_encoder, carr_indexer, carr_encoder, vec_assembler])
+```
+
+##### Split Test vs Train
+- In Spark it is important to make the splitting ==after== all the transformations.
+
+- Transform the data
+```python
+# Fit and transform the data
+piped_data = flights_pipe.fit(model_data).transform(model_data)
+```
+
+- Split the data 
+```python
+# Split the data into training and test sets
+training, test = piped_data.randomSplit([.6, .4])
+```
+
+### Logistic Regression with pyspark
+
+##### The ML model
+
+```python
+from pyspark.ml.classification import LogisticRegression
+
+lr = LogisticRegression()
+```
+
+##### The evaluator
+```python
+import pyspark.ml.evaluation as evals
+
+# Create a BinaryClassificationEvaluator
+evaluator = evals.BinaryClassificationEvaluator(metricName = 'areaUnderROC')
+```
+
+##### Make a grid for hyperparameter tunning
+
+- Tune each hyperparameter declaring them one by one
+
+```python
+import pyspark.ml.tuning as tune
+
+# Create the parameter grind 
+grid = tune.`ParamGridBuilder`()
+
+# Add the hyperparameter
+grid = grid.addGrid(lr.regParam,
+				   np.arange(0, .1, .01))
+
+grid = grid.addGrid(lr.elasticNetParam,
+					[0, 1])
+
+# build the grid
+grind = grid.build()
+```
+
+
+##### Make the Cross-Validator
+
+```python
+# Create the CrossValidator
+cv = tune.CrossValidator(
+	estimator = lr,
+	estimatorParamMaps = grid,
+	evaluator = evaluator
+)
+```
+
+##### Fit the model
+
+```python
+# Call lr.fit()
+models = cv.fit(training)
+
+# Extract the best Model
+best_lr = models.bestModel
+```
+
+##### Evaluate the model
+```python
+# Make the predictions over the test
+test_results = best_lr.transform(test)
+
+# Evaluate the predictions
+print(evaluator.evaluate(test_results))
+```
