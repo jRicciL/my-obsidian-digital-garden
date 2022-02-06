@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   {% include head.html %}
-  <body>
-    <nav>{% include nav.html %}</nav>
-    <div class="wrapper">
+  <body class="container-fluid">
+    {% include nav.html %}
+    <div>
       <main>{{ content }}</main>
       <footer>{% include footer.html %}</footer>
     </div>
