@@ -5,18 +5,34 @@ id: home
 permalink: /
 ---
 
-# Welcome! 🌱
+#  Welcome to my Digital Garden! 🍀🐕‍🦺
 
-<p style="padding: 3em 1em; background: #f5f7ff; border-radius: 4px;">
-  Take a look at <span style="font-weight: bold">[[Your first note]]</span> to get started on your exploration.
-</p>
+This is my <mark><b>digital garden</b></mark> where I keep notes (taken using [Obsidian.md](https://obsidian.md/)) from topics I am interested in:
+- Data Science
+- Programming with `Python` and `R`
+- Machine Learning and Deep Learning
+- Containers and Orchestration
+- Courses and Certificates
 
-This digital garden template is free, open-source, and [available on GitHub here](https://github.com/maximevaillancourt/digital-garden-jekyll-template).
 
-The easiest way to get started is to read this [step-by-step guide explaining how to set this up from scratch](https://maximevaillancourt.com/blog/setting-up-your-own-digital-garden-with-jekyll). If you need any help, my [DMs are open on Twitter (@vaillancourtmax)](https://twitter.com/vaillancourtmax). 👋
+<div class="alert alert-warning" role="alert">
+  <b>I'm still working</b> on the design and navigation of the site, but you are welcome to look and see if you find something interesting.
+</div>
+
+
+### Navigation
+<mark><b>Click</b></mark> on some <span id='note-color'>note</span> in the graph below and start navigating.
+
+<hr>
+
+{% include notes_graph.html %}
+
+## Acknowledgements
+Based on this [GitHub repository](https://github.com/maximevaillancourt/digital-garden-jekyll-template) by [@vaillancourtmax](https://twitter.com/vaillancourtmax)
 
 <style>
-  .wrapper {
-    max-width: 46em;
-  }
+#note-color {
+  color: #1CACB6;
+  font-weight: bold;
+}
 </style>
