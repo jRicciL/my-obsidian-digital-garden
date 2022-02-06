@@ -1,25 +1,38 @@
 <style>
   .links line {
-    stroke: #ccc;
-    opacity: 0.5;
+    stroke: rgb(252, 152, 141);
+    opacity: 0.9;
   }
 
   .nodes circle {
     cursor: pointer;
-    fill: #8b88e6;
+    fill: #1bacb6;
     transition: all 0.15s ease-out;
+
+  }
+
+  .nodes:hover {
+    fill: rgb(232, 53, 98);
   }
 
   .text text {
     cursor: pointer;
+    font-family: Helvetica, sans-serif;
     fill: #333;
+    letter-spacing: -2px !important;
+    opacity: 0.4;
     text-shadow: -1px -1px 0 #fafafabb, 1px -1px 0 #fafafabb, -1px 1px 0 #fafafabb, 1px 1px 0 #fafafabb;
+  }
+
+  .text text:hover{
+    opacity: 1;
   }
 
   .nodes [active],
   .text [active] {
     cursor: pointer;
-    fill: black;
+    fill: rgb(232, 169, 53);
+    opacity: 1;
   }
 
   .inactive {
@@ -28,7 +41,7 @@
   }
 
   #graph-wrapper {
-    background: #fcfcfc;
+    background: #ffffff;
     border-radius: 4px;
     height: auto;
   }
@@ -42,23 +55,25 @@
   <script>
     const MINIMAL_NODE_SIZE = 8;
     const MAX_NODE_SIZE = 12;
-    const ACTIVE_RADIUS_FACTOR = 1.5;
-    const STROKE = 1;
-    const FONT_SIZE = 16;
+    const ACTIVE_RADIUS_FACTOR = 1.6;
+    const STROKE = 2;
+    const FONT_SIZE = 12;
     const TICKS = 200;
     const FONT_BASELINE = 40;
-    const MAX_LABEL_LENGTH = 50;
+    const MAX_LABEL_LENGTH = 30;
 
     const graphData = {% include notes_graph.json %}
     let nodesData = graphData.nodes;
     let linksData = graphData.edges;
+
+    // const N = d3.map(nodesData, nodeId).map(intern);
 
     const nodeSize = {};
 
     const updateNodeSize = () => {
       nodesData.forEach((el) => {
         let weight =
-          3 *
+          6 *
           Math.sqrt(
             linksData.filter((l) => l.source === el.id || l.target === el.id)
               .length + 1
@@ -170,33 +185,76 @@
       element.setAttribute("height", window.innerHeight);
     };
 
+    const ticked = () => {
+      node.attr("cx", (d) => d.x)
+          .attr("cy", (d) => d.y);
+      // To positionate text 
+      text
+        .attr("x", (d) => d.x)
+        .attr("y", (d) => d.y - (FONT_BASELINE - nodeSize[d.id]) / zoomLevel);
+      link
+        .attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y);
+    };
+
+
     window.onresize = reportWindowSize;
 
     const svg = d3.select("svg");
     const width = Number(svg.attr("width"));
-    const height = Number(svg.attr("height"));
-    let zoomLevel = 1;
+    const height = 1200 
+    let zoomLevel = 1; 
 
-    const simulation = d3
-      .forceSimulation(nodesData)
-      .force("forceX", d3.forceX().x(width / 2))
-      .force("forceY", d3.forceY().y(height / 2))
-      .force("charge", d3.forceManyBody())
-      .force(
-        "link",
-        d3
-          .forceLink(linksData)
-          .id((d) => d.id)
-          .distance(70)
-      )
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(80))
-      .stop();
+    svg.attr("height", height)
+        .attr("viewBox", [-width / 2, -height / 2, width, height])
+        .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+
+    // Construct the forces.
+    const forceNode = d3.forceManyBody();
+    const forceLink = d3.forceLink(linksData)
+                        .id((d) => d.id)
+                        .distance(30)
+    // if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
+    // if (linkStrength !== undefined) forceLink.strength(linkStrength);
+
+    const simulation = d3.forceSimulation(nodesData)
+      .force("link", forceLink)
+      // .force("forceX", d3.forceX().x(width))
+      // .force("forceY", d3.forceY().y(height))
+      .force("charge", forceNode)
+      .force("center",  d3.forceCenter())
+      .force("collision", d3.forceCollide().radius(30))
+      .on("tick", ticked); 
+
+    // const simulation = d3
+    //   .forceSimulation(nodesData)
+    //   // .force("forceX", d3.forceX().x(width))
+    //   // .force("forceY", d3.forceY().y(height))
+    //   .force("charge", d3.forceManyBody())
+    //   .force(
+    //     "link",
+    //     d3
+    //       .forceLink(linksData)
+    //       .id((d) => d.id)
+    //       .distance(5)
+    //   )
+    //   .force("collision", d3.forceCollide().radius(50))
+    //   .force("center", d3.forceCenter())
+      
 
     const g = svg.append("g");
+
     let link = g.append("g").attr("class", "links").selectAll(".link");
-    let node = g.append("g").attr("class", "nodes").selectAll(".node");
-    let text = g.append("g").attr("class", "text").selectAll(".text");
+
+    let node = g.append("g")
+                .attr("class", "nodes")
+                .selectAll(".node")
+                .call(drag(simulation));
+
+    let text = g.append("g").attr("class", "text")
+                .selectAll(".text");
 
     const resize = () => {
       if (d3.event) {
@@ -209,8 +267,10 @@
 
       const font = Math.max(Math.round(zoomOrKeep(FONT_SIZE)), 1);
 
-      text.attr("font-size", (d) => font);
-      text.attr("y", (d) => d.y - zoomOrKeep(FONT_BASELINE) + 8);
+      // text.attr("font-size", (d) => font);
+      // text.attr("y", (d) => d.y - zoomOrKeep(FONT_BASELINE) + 8);
+
+
       link.attr("stroke-width", zoomOrKeep(STROKE));
       node.attr("r", (d) => {
         return zoomOrKeep(nodeSize[d.id]);
@@ -221,17 +281,32 @@
         .attr("r", (d) => zoomOrKeep(ACTIVE_RADIUS_FACTOR * nodeSize[d.id]));
     };
 
-    const ticked = () => {
-      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-      text
-        .attr("x", (d) => d.x)
-        .attr("y", (d) => d.y - (FONT_BASELINE - nodeSize[d.id]) / zoomLevel);
-      link
-        .attr("x1", (d) => d.source.x)
-        .attr("y1", (d) => d.source.y)
-        .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y);
-    };
+
+
+    function drag(simulation) {    
+      function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      }
+      
+      function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+      }
+      
+      function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      }
+      
+      return d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended);
+    }
+
 
     const restart = () => {
       updateNodeSize();
@@ -257,7 +332,7 @@
       text = text
         .enter()
         .append("text")
-        .text((d) => shorten(d.label.replace(/_*/g, ""), MAX_LABEL_LENGTH))
+        .text((d) => shorten(d.label.replace(/_*/g, " "), MAX_LABEL_LENGTH))
         .attr("font-size", `${FONT_SIZE}px`)
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "central")
@@ -281,15 +356,30 @@
       ticked();
     };
 
-    const zoomHandler = d3.zoom().scaleExtent([0.2, 3]).on("zoom", resize);
+    const zoomHandler = d3.zoom()
+          .scaleExtent([0.4, 1.5])
+          .on("zoom", resize);
 
     zoomHandler(svg);
     restart();
+    console.log(zoomLevel)
+
 
     function isCurrentPath(notePath) {
       return window.location.pathname.includes(notePath)
     }
 
+    function capSentence(text) {
+      let wordsArray = text.toLowerCase().split(' ')
+      
+      let capsArray = wordsArray.map( word=>{
+          return  word.replace(word[0], word[0].toUpperCase())
+      })
+      
+      return capsArray.join(' ')
+    }
+
+    // To regulate the length of the node titles
     function shorten(str, maxLen, separator = ' ') {
       if (str.length <= maxLen) return str;
       return str.substr(0, str.lastIndexOf(separator, maxLen)) + '...';
