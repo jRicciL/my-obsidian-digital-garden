@@ -1,4 +1,4 @@
-title:               Joel Ricci's Obsidian garden
+title:               JRL - Digital Garden 🌿
 include:             ['_pages']
 exclude:             ['_includes/notes_graph.json']
 # You may need to change the base URL depending on your deploy configuration.
@@ -55,5 +55,17 @@ defaults:
       layout: "default"
   - scope:
       path: "_notes/**/*.md"
+      # Commented for fast rendering
     values:
       layout: "note"
+
+exclude:
+  - "_notes/Zorro.md"
+  - "_notes/Templates"
+  - "_notes/**Untitled.md"
+  - "_notes/img/"
+  - "_notes/Clases_Aprendizaje_Profundo_Mariano"
+  - "_notes/.obsidian"
+  - "_site"
+  - ".ipynb_checkpoints"
+  
