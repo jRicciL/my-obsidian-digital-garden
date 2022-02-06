@@ -17,7 +17,7 @@ class BidirectionalLinksGenerator < Jekyll::Generator
       all_docs.each do |note_potentially_linked_to|
         title_from_filename = File.basename(
           note_potentially_linked_to.basename,
-          File.extname(note_potentially_linked_to.basename)
+          File.extname(note_potentially_linked_to.basename).capitalize
         )
         # Commented to solve issues related to ref connections
         # .gsub('_', ' ').gsub('-', ' ').capitalize
@@ -60,10 +60,16 @@ class BidirectionalLinksGenerator < Jekyll::Generator
         )
       end
 
-      # For images
+      # For images 
       current_note.content = current_note.content.gsub(
         /\!\[\[(.*?\.png)\]\]/i,
         "<img src='/assets/img/\\1'/>"
+      )
+
+      # For internal references using subtitles `#``
+      current_note.content = current_note.content.gsub(
+        /\[\[\#(.*?)\]\]/i,
+        "<a class='internal-link' href='#{'\1'.sub(' ', '-').downcase!}'>\\1</a>" 
       )
 
       # At this point, all remaining double-bracket-wrapped words are
@@ -91,7 +97,7 @@ class BidirectionalLinksGenerator < Jekyll::Generator
       graph_nodes << {
         id: note_id_from_note(current_note),
         path: "#{site.baseurl}#{current_note.url}#{link_extension}",
-        label: current_note.data['title'],
+        label: format_title_label(current_note.data['title']),
       } unless current_note.path.include?('_notes/index.html')
 
       # Edges: Jekyll
@@ -119,5 +125,15 @@ class BidirectionalLinksGenerator < Jekyll::Generator
       .delete(' ')
       .to_i(36)
       .to_s
+  end
+
+  def titleize(str)
+    str.split(/ |\_/).map(&:capitalize).join(" ")
+  end
+
+  def format_title_label(str)
+    titleize(
+      str.gsub('-', ' ').gsub('-', ' ')
+    ).gsub(/ +/, " ")
   end
 end

@@ -1,6 +1,6 @@
 <style>
   .links line {
-    stroke: rgb(252, 152, 141);
+    stroke: rgb(243, 102, 102);
     opacity: 0.9;
   }
 
@@ -19,13 +19,14 @@
     cursor: pointer;
     font-family: Helvetica, sans-serif;
     fill: #333;
-    letter-spacing: -2px !important;
-    opacity: 0.4;
+    letter-spacing: normal !important;
+    opacity: 0.6;
     text-shadow: -1px -1px 0 #fafafabb, 1px -1px 0 #fafafabb, -1px 1px 0 #fafafabb, 1px 1px 0 #fafafabb;
   }
 
   .text text:hover{
     opacity: 1;
+    fill: #000;
   }
 
   .nodes [active],
@@ -328,11 +329,13 @@
       link = link.enter().append("line").attr("stroke-width", STROKE).merge(link);
 
       text = text.data(nodesData, (d) => d.label);
+  
       text.exit().remove();
       text = text
         .enter()
         .append("text")
-        .text((d) => shorten(d.label.replace(/_*/g, " "), MAX_LABEL_LENGTH))
+        .text((d) => shorten(d.label, MAX_LABEL_LENGTH))
+        // .text((d) => capSentence(d))
         .attr("font-size", `${FONT_SIZE}px`)
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "central")
@@ -362,7 +365,6 @@
 
     zoomHandler(svg);
     restart();
-    console.log(zoomLevel)
 
 
     function isCurrentPath(notePath) {
