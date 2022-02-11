@@ -162,7 +162,7 @@ FROM invoice
 WHERE total NOT BETWEEN 20 AND 30;
 ```
 
-### `NUL` value
+### `NULL` value
 - `NULL` indicates there is no value for that record
 - Help highlight gaps in our data
 	- `unknown` or `missing` values

@@ -54,4 +54,3 @@
 - The main thing for using SQL
 	- Data retrieval
 
-## Thinking about your data
