@@ -87,5 +87,3 @@ Finally, the r2 value is another common metric when looking at regression values
 ### Closing Words
 
 This ends this lesson on metrics. In the final lesson before the project, you will get some practice tuning and optimizing your models.
-
-NEXT
