@@ -10,22 +10,25 @@
 2. Get the line close to the point
 3. $y=w_1x + w_2$
 4. Add $p$ to $w_1$ 
+	1. - Add if $q > q'$, subtract otherwise
 5. $y = (w_1 + p)x + (w_2 + 1)$
-	- Here, we add to $w_1$ an step of size $p$, which is quite great.
-	- In #MachineLearning, we want to take little steps
+	- Here, we add to $w_1$ an step of size $p$
+	- However, in #MachineLearning, we want to take little steps
 		- We will call this step size => #learning-rate 
 - ==Learning rate==: $\alpha = 0.05$
 - $y = (w_1 + \alpha \cdot p)x + (w_2 + \alpha)$
 
 #### Even simpler
-> Basically, subtract $\alpha \times p$ to $w1$ and $\alpha$ to $w_2$
-> - $p$ affects only $x$ through $w_1$
+- Basically, *add or subtract*  $\alpha \times p$ to $w_1$ and $\alpha$ to $w_2$
+	- Add if $q > q'$, subtract otherwise
+
+> $p$ affects only $x$ through $w_1$
 
 ```python
 def absolute_trick(w_1: float, 
-				   w_2: float, 
-				   point: tuple, 
-				   alpha: float = 0.01):
+		   w_2: float, 
+		   point: tuple, 
+		   alpha: float = 0.01):
     p, q = point
     # Change the signs if the line is above the point
     q_prime = w_1 * p + w_2 # compute q_p (or y)
@@ -50,9 +53,8 @@ absolute_trick(w_1 = -0.6, w_2 = 4,
 ## The square trick
 #SquareTrick
 
-Similar to [[#The square trick]], however, here we will add/subtract to $q$ the current value $q'$ of line $f$ at $f=(p, q')$:
+Similar to [[#The absolute trick]], however, here we will *add* the current value $q'$ to $q$, $q'$ comes from line $f$ at $f=(p, q')$:
 - $y = (w_1 + p[q - q']\alpha)x + (w_2 + [q - q']\alpha)$
-- Add if $q > q'$
 - The idea is to ==add the vertical distance== into the formula by considering $q$
 - Different form the **Absolute trick** it is not necessary to verify if the *point* is below or above the line (whether $q < q'$), since the term $(q - q')$ evaluates this and determines if the value is added or subtracted
 
@@ -77,71 +79,79 @@ square_trick(w_1 = -0.6, w_2 = 4, point = (-5, 3), alpha = 0.01)
 ```
 
 ## Gradient Descent
-- Develop an algorithm that best fits a set of points
-	- Reduce the error of the model 
+- Develop an **algorithm** that *best fits* a set of points
+	- Reduce the `error` of the model 
 	- ==Gradient Descent==^[[[Optimizers]]] is used to reduce the error
-		- Find the gradient => the direction to follow to minimize the error
+		- Find the gradient => *the direction to follow to minimize the error*
 			- The parameters $w$ are updated using this gradient
 			- The gradient contains the partial derivatives of the Error function in relation with each parameter $w_i$
 		- We need an ==Error function==
-		-
+
+
 ### Gradient descent formula
 > Gradient of **Error Function**
+
 $$w_i \leftarrow w_i + \alpha \frac{\partial}{\partial w_i}\mathbf{Error Function}$$
 
 ## Error Function
 
 ### Mean Absolute Error
-> The error is ==always== positive
-
-- The ==error== at $x_i$ => $error = |y - \hat y|$
+- The error is ==always== positive
+- The ==error== at $x_i$ => 
+	- $error = \|y - \hat y\|$
 - The ==TOTAL== error (norm 1) => **The Total Absolute Error**
-	- $\mathbf{Error} = \sum^m_i |y - \hat y|$
+	- $\mathbf{Error} = \sum^m_i \|y - \hat y\|$
 - The ==Mean Absolute Error==:
-	- $\frac{1}{m}\mathbf{Error} = \sum^m_i |y - \hat y|$
+	- $\frac{1}{m}\mathbf{Error} = \sum^m_i \|y - \hat y\|$
 
 ```python
+# Mean Absolute Error
 np.abs(y_pred - y).mean()
 ```
 
 ### Mean Squared Error
-
+ 
 - We use the second norm -> squaring the error
 	- $\frac{1}{2m}\mathbf{Error} = \sum^m_i (y - \hat y)^2$
 	- Divide between $1/2$ simplifies the computation of the derivative
 		- This does not affect the Gradient descent process but simplifies computation
 
 ```python
+# Mean Squared Error
 ((y_pred - y)**2).mean()
 ```
 
-> #MSE is a quadratic function that has a minimum at the point in the middle.
-- 🟠 #MSE penalizes greater errors
+- #MSE is a quadratic function that has a minimum at the point in the middle.
+- 🟠 #MSE penalizes more **higher errors**
+
+***
 
 ## Minimizing Error Function
 
 The error is defined to be 
+- $\mathbf{Error} = \frac{1}{2}(y - \hat y)^2$
 
-$\mathbf{Error} = \frac{1}{2}(y - \hat y)^2$
+Also, the prediction $\hat y$ is defined as:
+- $\hat y = w_1 x + w_2$
 
-Also, the prediction $\hat y$
-$\hat y = w_1 x + w_2$
-
-So, because $\hat y$ is a function of $x$ we use the chain rule to calculate the derivative of the Error with respect to $w_1$
+So, because $\hat y$ is a function of $x$ we use the **chain rule** to calculate the *derivative* of the Error with respect to $w$ ($w_1$ for this case):
 
 $$\frac{\partial}{\partial w_1}\mathbf{Error} = \frac{\partial \mathbf{Error}}{\partial \hat y} \frac{\partial \hat y}{\partial w_1}$$
 
-- The first factor of the right hand side is the derivative of the Error with respect to the prediction $\hat y$ which is $-(y - \hat y)$
+- The ==first factor== of the right hand side is the derivative of the Error with respect to the prediction $\hat y$ which is $-(y - \hat y)$
 
-- The second factor is the derivative of the prediction with respect to $w_1$ , which is $x$
-- Therefor the derivative is:
+- The ==second factor== is the derivative of the prediction with respect to $w_1$ , which is $x$
+- Therefor the **derivative** is:
 
 $$\frac{\partial}{\partial w_1}\mathbf{Error}  = -(y - \hat y) \cdot x$$
+
+***
 
 ## Using Gradient Descent instead the Normal Equation
 - For a problem with $n$ features/variables ->
 	- We end with a system of $n$ ==Equations== with $n$ ==unknowns==
-	- Solving for systems with a $n$ large -> <mark style='background-color: #FFA793 !important'>Very computationally expensive</mark>
+	- Solving for systems with a $n$ large -> 
+		- <mark style='background-color: #FFA793 !important'>Is very computationally expensive</mark>
 
 ## Mean vs Total Error
 
