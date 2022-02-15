@@ -10,7 +10,7 @@
 2. Get the line close to the point
 3. $y=w_1x + w_2$
 4. Add $p$ to $w_1$ 
-	1. - Add if $q > q'$, subtract otherwise
+	- Add if $q > q'$, subtract otherwise
 5. $y = (w_1 + p)x + (w_2 + 1)$
 	- Here, we add to $w_1$ an step of size $p$
 	- However, in #MachineLearning, we want to take little steps
@@ -19,7 +19,7 @@
 - $y = (w_1 + \alpha \cdot p)x + (w_2 + \alpha)$
 
 #### Even simpler
-- Basically, *add or subtract*  $\alpha \times p$ to $w_1$ and $\alpha$ to $w_2$
+- Basically, **add or subtract**  $\alpha \times p$ to $w_1$ and $\alpha$ to $w_2$
 	- Add if $q > q'$, subtract otherwise
 
 > $p$ affects only $x$ through $w_1$
@@ -161,31 +161,34 @@ $$\frac{\partial}{\partial w_1}\mathbf{Error}  = -(y - \hat y) \cdot x$$
 - Therefore choosing between the mean squared error and the total squared error really just mounts to picking a different #learning-rate.
 
 ## Gradient Descent Flavors
--> [[C4 Gradient descent]] and [[Optimizers]]
---> [[Optimizers#Batch and Stochastic Gradient Descent]]
+> Related notes
+> -> [[C4 Gradient descent]] and [[Optimizers]]
+> --> [[Optimizers#Batch and Stochastic Gradient Descent]]
 
-🔴 <mark style='background-color: #FFA793 !important'>There are two ways of do linear regression</mark>:
+🔴 <mark style="background-color: #FFA793 !important">There are two ways of do linear regression</mark>:
 
-### Stochastic GD
+### Stochastic Gradient Descent
 1. Applying the squared (or absolute trick) at every point in our data ==one by one==, and repeat this process many times.
-	- Compute the gradient and update the $weights$ for each data point.
+	- Compute the gradient and update the $weights$ **for each data point**.
 
-### Batch GD
+### Batch Gradient Descent
 2. By applying the squared (or absolute) trick at every point in our data ==all at the same time==, and repeating the process many times.
-	- Compute the gradient and update the $weights$ using a**ll data** points at the **same time**
+	- Compute the gradient and update the $weights$ using **all data** points at the **same time**
 
 ![[Pasted image 20220211192730.png]]
 
 ### Mini-batch
-- Is the most used in practice.
+- Is the **most** used in practice.
 	- We used *batches* of size $b$, with $b << m$, where $m$ is the number of data points.
 	- All data points belonging to <mark style='background-color: #9CE684 !important'>each batch</mark> are used to perform a iteration of gradient descent and backpropagation
 
 Visit: [[Optimizers]]
 
-#### Mini-Batch Gradient Descent Quiz
+#### Quiz: Mini-Batch Gradient Descent 
 
 - Write a function that executes mini-batch gradient descent to find a best-fitting regression line.
+
+##### Gradient Descent Steps
 
 ```python
 import numpy as np
@@ -193,7 +196,8 @@ np.random.seed(42)
 
 def MSEStep(X, y, W, b, learning_rate = 0.005):
 	"""
-	This function implements the gradient descent step for squared error as a performance metric.
+	This function implements the gradient descent step 
+	for squared error as a performance metric.
 	
 	Parameters
 	X : array of predictior features
@@ -205,17 +209,21 @@ def MSEStep(X, y, W, b, learning_rate = 0.005):
 	W_new : predictor feature coefficients following gradient descent step
 	b_new : intercept following gradient descent step
 	"""
+	# Make the predictions
 	y_pred = X.dot(W) + b
+	# Compute the Error
 	error  = y - y_pred
+	# Get the partial derivatives 
 	dW     = - error.dot(X) 
 	db     = - error.sum()
+	# Update the weights using the given `learning_rate`
 	W_new  = W - learning_rate * dW
 	b_new  = b - learning_rate * db
 	
 	return W_new, b_new
 ```
 
-#### Steps
+###### Steps
 1. $\hat y = W^TX + b$
 2. $\mathbf{error} = (y - \hat y)$
 3. $\frac{\partial}{\partial W}\mathbf{Error}  = -(y - \hat y) \cdot X = \mathbf{error} \cdot X$
@@ -223,10 +231,13 @@ def MSEStep(X, y, W, b, learning_rate = 0.005):
 5. $W = W - \alpha \cdot \frac{\partial}{\partial w_1}\mathbf{Error}$
 6. $b = b - \alpha \cdot \frac{\partial}{\partial b}\mathbf{Error}$
 
-#### Mini-batch
+##### Mini-batch implementation
 
 ```python
-def miniBatchGD(X, y, batch_size = 20, learn_rate = 0.005, num_iter = 25):
+def miniBatchGD(X, y, 
+				batch_size = 20, 
+				learn_rate = 0.005, 
+				num_iter = 25):
     """
     This function performs mini-batch gradient descent on a given dataset.
 
@@ -251,11 +262,14 @@ def miniBatchGD(X, y, batch_size = 20, learn_rate = 0.005, num_iter = 25):
         batch = np.random.choice(range(n_points), batch_size)
         X_batch = X[batch,:]
         y_batch = y[batch]
+		# Use gradient descent
         W, b = MSEStep(X_batch, y_batch, W, b, learn_rate)
         regression_coef.append(np.hstack((W,b)))
     
     return regression_coef
 ```
+
+***
 
 ## Linear Regression with `SkLearn`
 
@@ -283,24 +297,25 @@ laos_life_exp = bmi_life_model.predict(21.07931)
 ```
 
 ## Multiple Linear Regression
-- $n$ dimensional space -> ==Predictive variable== or ==Independent==
-- $y$ is one dimension -> ==Response variable== or ==Dependent==
+- $X$ is $n$ dimensional: $X \in \mathbf{R}^n$ -> ==Predictive variable== or ==Independent==
+- $y$ is one dimension: $y \in \mathbf{R}^1$ -> ==Response variable== or ==Dependent==
 - The model is an $n-1$ hyperplane
 
 ## Polynomial Regression
 
 - Considers ==high degree polynomials== instead of using a simple linear model.
 
+***
 
 # Linear Regression Warnings
 
 ![[Pasted image 20220212161857.png]]
 
 1. **Linear regression work best with the data is Linear**
-	- If data is not lineal:
-		- Transform your data
-		- Add features
-		- Try other models
+	- If data **is not** lineal:
+		- 1️⃣ Transform your data
+		- 2️⃣ Add features
+		- 3️⃣ Try other models
 
 2. **Linear regression is sensitive to outliers**
 	- If there are outliers
@@ -312,21 +327,24 @@ laos_life_exp = bmi_life_model.predict(21.07931)
 ***
 
 # Regularization
-Related notes: [[Regularization]], [[ML_with_Spark#Regularization]], [[Optimization Formulation]]
+Related notes: 
+> [[Regularization]], [[ML_with_Spark#Regularization]], [[Optimization Formulation]]
 
 ### Model complexity
+
 ![[Captura de Pantalla 2022-02-12 a la(s) 16.27.04.png]]
 ### #Regularization 
-- Reduce the ==variance== of the model by reducing the model complexity
-	- Reduce the **combined error**
-	- <mark style='background-color: #9CE684 !important'>Simpler models</mark> have a tendency to **generalize better**.
+- Reduces the ==variance== of the model by reducing the model complexity
+	- Reduce the **combined error** 
+	- <mark style="background-color: #9CE684 !important">Simpler models</mark> have a tendency to **generalize better**.
 
-## Lasso and Ridge Regularization 
-- $L1$ => Lasso
-- $L2$ => Ridge
+## Lasso and Ridge Regularization => $L1$ and $L2$
+- $L1$ => `Lasso`
+- $L2$ => `Ridge`
 - $L1$ and $L2$ regularization:
 	- Penalizes a model by considering the number and size of their parameters/$weights$
-- Uses a $\lambda$ (`lambda`) hyperparameter that determines how much the model will be penalized.
+- Uses a $\lambda$ (`lambda`) hyperparameter that determines *how much the model will be penalized.*
+
 ![[Captura de Pantalla 2022-02-12 a la(s) 16.38.34.png]]
 
 ### L1 Regularization
