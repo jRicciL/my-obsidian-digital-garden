@@ -1,26 +1,31 @@
 # Decision Trees
 
-Other notes related: [[ML_with_Spark#Decision Tree]]
+> Related notes: 
+> - [[ML_with_Spark#Decision Tree]]
+
+***
 
 ## Entropy
 
-#### Intuition
+### Intuition
 
 ![[Captura de Pantalla 2022-02-13 a la(s) 11.52.41.png]]
 
-- High knowledge => Low entropy
-- Medium knowledge 
-- Low knowledge => High entropy
+- 🔴  *High knowledge* => **Low entropy**
+- 🟠  *Medium knowledge *
+- 🔵  *Low knowledge* => **High entropy**
 
 ![[Captura de Pantalla 2022-02-13 a la(s) 11.57.00.png]]
 
 
 ### Entropy formula
-#EntropyFormula
+#Entropy ($H$) Formula:
 
 $$H(X) = - \sum_{i=1}^n P(x_i) \cdot \mathbf{log_2}P(x_i)$$
 
-#### Entropy formula
+#### Python implementation
+
+- Formula to compute entropy given an array of probabilities.
 ```python
 import numpy as np
 
@@ -47,17 +52,19 @@ $\mathbf{log_2}(ab) = \mathbf{log_2}(a) + \mathbf{log_2}(b)$
 
 #### Exercises
 
-> **What is the entropy for a bucket with a ratio of four red balls to ten blue balls?**
+**What is the entropy for a bucket with a ratio of four red balls to ten blue balls?**
 > ==Answer==: `0.8631205`
 
-> **If we have a bucket with eight red balls, three blue balls, and two yellow balls, what is the entropy of the set of balls?**
+
+**If we have a bucket with eight red balls, three blue balls, and two yellow balls, what is the entropy of the set of balls?**
 > ==Answer==: 
 
 ```python
+# Solution
 a = ['R']*8 + ['B']*3 + ['Y']*2
-
+# Compute the probabilities
 probs = get_probabilities(a)
-
+# Get the entropy
 get_entropy(probs)
 ```
 
@@ -69,10 +76,12 @@ get_entropy(probs)
 > 1 => `Smallest`, 2 => `Medium`, 3 => `Largest`
 
 ### Information Gain Formula
-#InformationGain is calculated for a split by subtracting the weighted entropies of each branch ($Children$) from the original entropy ($Parent$)
-- When training a decision Tree using these metrics, **the best split** is chosen by ==Maximazing Information Gain==
+#InformationGain is calculated for a split by subtracting the *weighted entropies* of each branch ($Children$) from the original entropy ($Parent$)
+- When training a #DecisionTrees using these metrics, **the best split** is chosen by ==Maximazing Information Gain==
 
 $\mathbf{InformationGain}= \mathbf{Entropy}(Parent)− \left[ \frac{m}{m + n}\mathbf{Entropy}(Child_1) + \frac{n}{m + n}\mathbf{Entropy}(Child_2) \right]$
+
+##### Python implementation
 
 ```python
 def two_group_ent(first, tot):                        
@@ -86,10 +95,12 @@ g17_ent = 15/24 * two_group_ent(11,15) +
 answer = tot_ent - g17_ent  
 ```
 
+***
+
 ## Hyperparameters
 
 ### Maximum Depth
-- It's the largest possible length between the root to a leaf.
+- It's the **largest possible length** between the root to a leaf.
 - ⚠️ A tree of maximum length $k$ can have at most $2^k$ leafs.
 ![[Pasted image 20220213130433.png]]
 
@@ -100,9 +111,10 @@ answer = tot_ent - g17_ent
 
 ### Minimum number of samples per leaf
 
-- `min_samples_leaf` => Can be specified as a number or as a float.
-- If it's an integer, it's the minimum number of samples allowed in a leaf. If it's a float, it's the minimum percentage of samples allowed in a leaf.
--  If a threshold on a feature results in a leaf that has fewer samples than `min_samples_leaf`, the algorithm will not allow _that_ split, but it may perform a split on the same feature at a _different threshold_, that _does_ satisfy `min_samples_leaf`.
+- `min_samples_leaf` => Can be specified as a `number` or as a `float`.
+- If it's an `integer`, it's the minimum number of samples allowed in a leaf.
+- If it's a float, it's the minimum percentage of samples allowed in a leaf.
+- If a threshold on a feature results in a leaf that has fewer samples than `min_samples_leaf`, the algorithm will not allow _that_ split, but it may perform a split on the same feature at a _different threshold_, that _does_ satisfy `min_samples_leaf`.
 ![[Pasted image 20220213130906.png]]
 
 ## Hyperparameters and Overfitting
@@ -114,6 +126,8 @@ answer = tot_ent - g17_ent
 	-   **Small depth** can result in a very *simple model*, which may cause **underfitting**.
 -   ==Small minimum samples== per split may result in a complicated, highly branched tree, which can mean the model has memorized the data, or in other words, **overfit**. 
 -   ==Large minimum samples== may result in the tree not having enough flexibility to get built, and may result in **underfitting**.
+
+***
 
 ## Decision Trees in `sklearn`
 

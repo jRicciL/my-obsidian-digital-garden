@@ -12,7 +12,7 @@
 3. 📈 Linear Regression
 	- [[Linear Regression - Udacity]]
 4. 🧠 Perceptrons
-	- [[Perceptron Algo - Notes Udacity]]
+	- [[Perceptron Algorithms - Notes Udacity]]
 5. 🌳 Decision Trees
 	- [[Decision Trees - Udacity]]
 6. 🃏 Naive Bayes 
