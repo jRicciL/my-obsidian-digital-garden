@@ -1,7 +1,9 @@
 # Model Evaluation Metrics
 
-## `train_test_split`
-- Testing the models
+## Split the dataset
+
+### `train_test_split`
+- Use the function `train_test_split` to split the dataset into `train` and `test` sets.
 
 ```python
 # Import statements 
@@ -38,11 +40,13 @@ y_pred = model.predict(X_test)
 acc = accuracy_score(y_test, y_pred)
 ```
 
+***
+
 ## Confusion Matrix
 
 ![[Captura de Pantalla 2022-02-09 a la(s) 20.30.19.png]]
 
-- The usual layout of a #ConfusionMatrix
+The usual layout of a #ConfusionMatrix
 
 |          | Guessed Positive | Guessed Negative |
 | -------- | ---------------- | ---------------- |
@@ -50,19 +54,22 @@ acc = accuracy_score(y_test, y_pred)
 | Negative | FP               | TN               |
 
 
-### Type 1 and Type 2 Errors
-The classic example to understand Type 1 and Type 2 Errors
 
-<mark style='background-color: #9CE684 !important'>False Positives</mark> =>
-- **Type Error 1**: In the medical example this is when we misdiagnose a healthy patient as sick.
-<mark style='background-color: #FFA793 !important'>False Negatives</mark>
-- **Type Error 2**: Labeling as Negative a Positive case -> Misdiagnose as sick a healthy patient
+### Type 1 and Type 2 Errors
+The classic example to understand ==Type 1== and ==Type 2== `Errors`
+
+<mark style="background-color: #FFA793 !important">False Positives</mark> =>
+- 🚨 **Type Error 1**: In the medical example this is when we misdiagnose a healthy patient as sick.
+<mark style="background-color: #FFA793 !important">False Negatives</mark>
+- 🚨 **Type Error 2**: Labeling as Negative a Positive case -> Misdiagnose as sick a healthy patient
 
 #### Exercise - Confusion Matrix
 ![[Captura de Pantalla 2022-02-09 a la(s) 20.33.15.png]]
 
 > How many True Positives, True Negatives, False Positives, and False Negatives, are in the model above? Please enter your answer in that order, as four numbers separated by a comma and a space. For example, if your answers are 1, 2, 3, and 4, enter the string `1, 2, 3, 4`. Remember, in the image above the blue points are considered positives and the red points are considered negatives.
 > ==Answer== => `6, 5, 2,,1`
+
+***
 
 ## Accuracy
 - *How many samples did we classify correctly?*
@@ -74,9 +81,11 @@ $$\mathbf{Accuracy} = \frac{TP + TN }{TP + TN + FP + FN} = \frac{TP + TN}{N}$$
 from sklearn.metrics import accuracy_score
 ```
 
-#### When accuracy wont work
+##### ⚠️ When accuracy won't work
 
 - For ==imbalanced== datasets
+
+***
 
 ## Precision and Recall
 

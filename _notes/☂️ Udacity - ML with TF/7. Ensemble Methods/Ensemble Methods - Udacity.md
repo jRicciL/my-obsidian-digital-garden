@@ -1,34 +1,39 @@
 # Ensemble Models
 
+This note is about two types of #EnsembleLearning models:
 - 👜 Bootstrap Aggregation -> #Bagging
 	- Parallelize models
 - 🚀 Boosting => #Boosting
 	- Serialize models
 
+***
+
 ## Ensembles
 
 - **Weak** learners =>
-	- Decision trees are commonly used
+	- #DecisionTrees are commonly used
 	- #DecisionTrees are the default base estimator of `sklearn`
 
 ### Why would we want to Ensemble Learners Together?
 
-- To improve the trade-off between #Bias and #variance 
-	- Simple linear models tend to have ==high bias==
-	- Decision Trees tend to have ==High Variance==
-		- Specially those with no early stopping parameters
+- To **improve the trade-off** between #Bias and #variance 
+	- Simple `linear` models tend to have ==high bias==
+	- Other models, like #DecisionTrees, tend to have ==High Variance==
+		- Specially those with *no early stopping parameters*
 	- A #DecisionTrees is a highly variance algorithm	
-- By combining algorithms
-	- We can often bould models that perform better by meeting in the middle in terms of bias and variance.
+- By combining algorithms in an ==Ensemble==:
+	- We can often build models that perform better by meeting in the middle in terms of `bias` and `variance`.
 
 #### Introducing randomness into Ensembles
-- Introduce Randomness into ensembles is a methods to improve the performance of ensemble methods.
-	- Randomness combats the tendency of these algorithms to memorize data -> Overfit
-- There are two ways of introduce randomness:
-	1. ==Bootstrap the data==: 
+- Introduce `Randomness` into ensembles is a method to improve the performance:
+	- Randomness combats the tendency of individual algorithms to ==memorize== data -> 🚨 Overfit 🚨
+- There are two ways of introduce `randomness`:
+	- 1️⃣ ==Bootstrap the data==: 
 		- That is sampling the data with replacement
-	2. ==Subset the features randomly==:
+	- 2️⃣ ==Subset the features randomly==:
 		- In **each split** of a decision tree or with each algorithm used in an ensemble only use a subset of the total possible features.
+
+***
 
 ## Random Forest
 
@@ -40,13 +45,15 @@
 - ==Weak== learners => A decision tree of one node
 - #RandomForest use ==Voting== and ==Soft-voting== to combine the individual predictions of the #WeakLearners
 
+***
+
 ## AdaBoost
 
 - Proposed by Freund and Schapire in 1996
 - Is one of the most used algorithms for Boosting
-- #AdaBoost uses a set of sequential learners
-	- At each new learner the missclassified points have higher weights
-		- This leds the new model to focus more on those  points missclassified by the *previous learner*
+- #AdaBoost uses a ==set of sequential learners==
+	- At each new learner the missclassified points have *higher* $weights$
+		- This forces the *new model* to focus more on those  points missclassified by the *previous learner*
 - The **individual models** are ==combined== on how well they perform individually
 	- #AdaBoost provides a $weight$ to each of the individual models/learners
 
@@ -61,9 +68,9 @@
 > Calculate the weight of the first model, with 2 significant digits.
 ![[Pasted image 20220213203317.png]]
 
-acc Model 1 => 4 + 3 / 8 = 7 / 8 = 0.875
-acc Model 2 => 2 + 2 / 8 = 4 / 8 = 0.5
-acc Model 3 => 1 + 1 / 8 = 2 / 8 = 0.25
+- acc Model 1 => 4 + 3 / 8 = 7 / 8 = 0.875
+- acc Model 2 => 2 + 2 / 8 = 4 / 8 = 0.5
+- acc Model 3 => 1 + 1 / 8 = 2 / 8 = 0.25
 
 **Solution:**
 
@@ -90,9 +97,9 @@ get_ADAboost_estimator_weight(0.25)
 ![[Captura de Pantalla 2022-02-13 a la(s) 20.41.48.png]]
 
 ### Combining the models
-- Sum the weights of each individual model
+- Sum the $weights$ of each individual model
 	- If they overlap sum their values
-	- Use this values to create the decision boundary
+	- Use this values to create the ==decision boundary==
 - Values with positive values belong to areas from $Positive$ class
 
 ### AdaBoost in `sklearn`
