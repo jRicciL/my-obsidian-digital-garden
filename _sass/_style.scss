@@ -242,3 +242,12 @@ content pre {
 content em {
   color: #1e7185;
 }
+
+// Extend table class from bootstrap
+table{
+  @extend .table;
+}
+
+thead{
+  @extend .thread-light;
+}
