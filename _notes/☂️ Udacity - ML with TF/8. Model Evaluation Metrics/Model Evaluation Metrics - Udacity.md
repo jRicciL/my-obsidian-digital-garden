@@ -228,3 +228,5 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.metrics import precision_score, recall_score, auc, accuracy_score, fbeta_score
 ```
 
+## Related Notes
+- [[4. W1 - Performance Metrics]]

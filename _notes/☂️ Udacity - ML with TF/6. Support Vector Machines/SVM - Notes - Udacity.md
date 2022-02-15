@@ -1,26 +1,26 @@
 # Support Vector Machines
 
-### Margin Maximizing
-- Consider the number of missclassifications 
+### Margin Maximization
+- Consider the number of miss-classifications 
 - While increase the wide of the margin
 
 #### Goal
 1. Maximize the wide of the margin
-2. Minimize the number of missclassified samples
+2. Minimize the number of miss-classified samples
 
 ## SVM ERROR
 - **Error** => `Classification Error` + `Marging Error`
 ![[Captura de Pantalla 2022-02-13 a la(s) 19.33.16.png]]
 
 
-### Classification Error
-- Compared to a Logistic Regression or to a Perceptron
-	- The SVM draws a margin instead of a single hyperplane.
+### 1. ==Classification Error==
+- Compared to a [[Logistic Regression]] or to a [[Perceptron Algorithms - Notes Udacity]]
+	- The `SVM` **draws a margin** instead of a single hyperplane.
 	- Penalizes those samples that fall inside the margin
 		- Thus, tries to keep the margin empty
-	- Thus #SVM is more focused in samples that are closer to the decision boundary
+	- Thus #SVM is more focused in **samples that are closer to the decision boundary**
 
-### Margin Error
+### 2. ==Margin Error==
 
 ![[Captura de Pantalla 2022-02-13 a la(s) 19.21.59.png]]
 - **Marging Error**
@@ -29,7 +29,7 @@
 
 ## The $C$ parameter
 
-- The `C` hyperparameter
+- The `C` *hyperparameter*
 	- Is related to the `Classification Error`
 	- Provides flexibility to the model by **regularizing the size of the margin**
 	- $C$:
@@ -114,3 +114,6 @@ y_pred = model.predict(X)
 # TODO: Calculate the accuracy and assign it to the variable acc.
 acc = accuracy_score(y, y_pred)
 ```
+
+## Related Notes
+- [[SVM Recap - Udacity]]

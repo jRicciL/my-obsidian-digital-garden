@@ -75,3 +75,8 @@ def trainPerceptronAlgorithm(X, y, learn_rate = 0.01, num_epochs = 25):
     return boundary_lines
 
 ```
+
+## Related notes
+- [[Neural Networks and Deep Learning]]
+- [[W4 - NeuralNetworks Highlights]]
+- [[NN_Weigth_initialization]]

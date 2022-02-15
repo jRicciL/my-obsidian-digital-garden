@@ -5,7 +5,7 @@
 #NaiveBayes 
 
 ### A simple, probabilistic classifier family
-- Based on simple probabilistic models:	
+- Based on *simple probabilistic models*:	
 	- on how the data in *each class* might be generated
 - ==Naive== => **Features are conditionally independet**
 	- Because it assumes that each feature of an instance is independent (*little to no correlation*) of the other features

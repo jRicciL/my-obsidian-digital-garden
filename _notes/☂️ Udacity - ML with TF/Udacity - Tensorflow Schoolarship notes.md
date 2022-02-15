@@ -16,15 +16,17 @@
 5. 🌳 Decision Trees
 	- [[Decision Trees - Udacity]]
 6. 🃏 Naive Bayes 
-	- [[Naiva Bayes Notes - udacity]]
+	- [[Naive Bayes Notes - Udacity]]
 	- [[Bayesian_Inference_solution - Udacity]]
 7. 📍 Support Vector Machines
 	- [[SVM - Notes - Udacity]]
 	- [[SVM Recap - Udacity]]
-8. 📊 Model Evaluation Metrics
+8. 🧩 Ensemble Methods
+	- [[Ensemble Methods - Udacity]]
+9. 📊 Model Evaluation Metrics
 	- [[Model Evaluation Metrics - Udacity]]
 	- [[Recap Notes - Metrics - Udacity]]
-9. 🏋️‍♂️ Training and Tuning
+10. 🏋️‍♂️ Training and Tuning
 	- [[Training and Tuning - Udacity]]
 10. 📆 Final Assessment Instructions
 	- [[Final Assessment - Udacity]]

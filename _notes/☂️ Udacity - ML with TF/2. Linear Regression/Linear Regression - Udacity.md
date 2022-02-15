@@ -438,3 +438,9 @@ In this lesson, you were introduced to linear models. Specifically, you saw:
 ### Outro
 
 In this lesson, you were predicting quantitative values. Predicting quantitative values is often just considered a `Regression` problem. In the next lesson, you will be introduced to predicting a category, which is called a `Classification` problem.
+
+## Related Notes
+- [[Linear Regression]]
+- [[Local Optima]]
+- [[Gradient_checking]]
+- [[C4 Gradient descent]]

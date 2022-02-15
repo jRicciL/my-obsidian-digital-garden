@@ -39,6 +39,5 @@ By far the most popular kernel is the **rbf** kernel (which stands for radial ba
 
 [The derivation of SVMs from Stanford's CS229 notes.](http://cs229.stanford.edu/notes/cs229-notes3.pdf)
 
-NEXT
-
-;
+## Related Notes
+- [[SVM - Notes - Udacity]]
