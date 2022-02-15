@@ -348,8 +348,6 @@ Related notes:
 ![[Captura de Pantalla 2022-02-12 a la(s) 16.38.34.png]]
 
 ### L1 Regularization
-
-<mark style='background-color: #FFA793 !important'>Intuition:</mark>
 - Take all of the coefficients (parameters or $weights$) of the model.
 - Get their **absolute values**.
 - Sum all values => ==combined error==
@@ -394,15 +392,15 @@ print(reg_coef)
 ```
 
 # Feature Scaling
-- ==Feature Scaling== => is a way of transforming the features into a common range of values
+==Feature Scaling== => is a way of transforming the features into a common range of values
 
 #### 🔥 When should I use Feature Scaling?
 1. When the algorithm uses a ==distance-based metric== to predict.
-	1. Support Vector Machines [[SVM]]
-	2. k-Nearest Neighbors 
+	1. **Support Vector Machines** -> [[SVM]]
+	2. **k-Nearest Neighbors** 
 2. When #Regularization  is incorporated:
-	- Because the penalty on particular parameters depend of the scale of the feature they are associated with.
-3. Makes the training process less sensitive to the scale of features.
+	- Because the penalty on particular parameters depend of the ==scale== of the feature they are associated with.
+3. Makes the training process **less sensitive** to the scale of features.
 4. Makes optimization well-conditioned:
 	- Improves the behavior of [[C4 Gradient descent]] algorithms
 
