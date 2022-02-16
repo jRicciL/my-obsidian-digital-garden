@@ -136,19 +136,21 @@ _What is the recall of the linear model above? Please write your number as a dec
 ## F1-score
 - Combination ==Recall== and ==Precision==
 - `F1-score` is the <mark style='background-color: #FFA793'>Harmonic Mean</mark>
-	- It is always lower than the arithmetic mean
-	- Penalizes more lower values
+	- It is *always* lower than the *arithmetic mean*
+	- **Penalizes more lower values**
 
 
 $$\mathbf{F1-score} = 2 \cdot \frac{\mathbf{Precision} * \mathbf{Recall}}{\mathbf{Precision} + \mathbf{Recall}}$$
 
 #### Exercise
 
-> If the Precision of the medical model is **55.6%**, and the Recall is **83.3%**, what is the F1 Score? (Please write your answer as a percentage, and round it to 1 decimal point.)
+_If the Precision of the medical model is **55.6%**, and the Recall is **83.3%**, what is the F1 Score? (Please write your answer as a percentage, and round it to 1 decimal point.)_
 > ==Answer== -> 66.7
 
 ```python
 def F1_score(P, R):
+	'''Computes F1-score given a 
+	   Precision and a Recall value'''
 	return 2 * (P*R)/(P+R)
 ```
 
@@ -159,7 +161,7 @@ def F1_score(P, R):
 
 $$\mathbf{F\beta-score} = (1 + \beta^2) \cdot \frac{\mathbf{Precision} * \mathbf{Recall}}{\beta^2 \times \mathbf{Precision} + \mathbf{Recall}}$$
 
-#### Some highlights
+#### Some ==highlights==
 - Because `beta` is squared, the minimum value is zero.
 - There is not upper limit for `beta`
 - When $\beta = 0$ the `F-score` is equal to **Precision**.
@@ -177,21 +179,23 @@ $$\mathbf{F\beta-score} = (1 + \beta^2) \cdot \frac{\mathbf{Precision} * \mathbf
 > -   Sending promotional material in the mail to potential clients
 >     - *High Precision model* => `beta = 0.1`
 
+***
+
 ## ROC - Receiver Operating Characteristic
 
-The ==ROC curve== takes into account the `True Positive Ratio` and the `False Postive Ration`
+The ==ROC curve== takes into account the `True Positive Ratio` (==Recall==) and the `False Postive Ratio` (==Specificity==).
 
 ![[Captura de Pantalla 2022-02-09 a la(s) 22.09.03.png]]
 
-##### True Positive Ratio
+##### True Positive Ratio => Recall
 - *How many true positives among all positives?*
 
 $$TPR = \frac{TP}{TP + FP} = TP / P$$
 
-##### False Positive Ratio
+##### False Positive Ratio => Specificity
 - *How many false positives among all negatives?*
 
-$$FPR = \frac{TN}{TN + FN} = TP / P$$
+$$FPR = \frac{TN}{TN + FN} = TN / N$$
 
 ![[Captura de Pantalla 2022-02-09 a la(s) 22.16.32.png]]
 
@@ -199,10 +203,12 @@ $$FPR = \frac{TN}{TN + FN} = TP / P$$
 
 ![[Captura de Pantalla 2022-02-09 a la(s) 22.20.42.png]]o
 
-## Regression Metrics
+***
+
+# Regression Metrics
 -> [[Linear Regression]]
 
-### Mean Absolute Error
+## Mean Absolute Error
 - 🔴  #MAE is not differentiable -> <mark style='background-color: #FFA793 !important'>Not used as an function to optimize</mark> with [[C4 Gradient descent]]
 
 ```python
@@ -215,17 +221,18 @@ guesses = regressor.predict(X)
 error = mean_absolute_error(y, guesses)
 ```
 
-### Mean Square Error
-- Used during gradient descent
+## Mean Square Error
+- Commonly used during gradient descent
+	- a differentiable equation
 
-### R2 score
+## R2 score
 
--> Compares the **error** of the ==linear regression model== with the **error** for the simplest model ==Compute the mean== of $y$.
+#R2 compares the **error** of the ==linear regression model== with the **error** for the *simplest model* (the one which prediction is made by ==compute the mean== of all $y$ values).
 
-==*How much variability is explained by the model?*==
+👉🏾 *How much variability is explained by the model?*
+
 $$R^2 = 1 - \frac{SSE}{SST} = 1 - \frac{Var(e)}{Var(y)} = 1 - \frac{\sum(y_i - \hat y_i)}{\sum(y_i - \bar y_i)}$$
 
--> ![[Linear Regression#R-squared]]
 
 ## Exercise
 
@@ -244,3 +251,5 @@ from sklearn.metrics import precision_score, recall_score, auc, accuracy_score, 
 
 ## Related Notes
 - [[4. W1 - Performance Metrics]]
+- [[Recap Notes - Metrics - Udacity]]
+- [[Linear Regression#R-squared]]
