@@ -3,36 +3,44 @@
 ## Types of errors
 
 ### Underfitting => Oversiplify
-- Does not weel in the ==Training set==
+- Does not well in the ==Training set== (neither in the `validation`/`test` set)
 	- Error due to ==bias==
+
 
 ![[Captura de Pantalla 2022-02-12 a la(s) 22.03.55.png]]
 
 
 ### Overfitting => Overcomplicate
-- Does weel in the training set, but because of memorization.
-	- Does not generalize well
+- Does well in the `training` set (because of memorization) and bad in the `validation`/`test` set.
+	- Does not ==generalize== well
 	- Fails with the development/validation set
-	- Error due to variance
+	- **Error due to variance**
+
 
 ![[Captura de Pantalla 2022-02-12 a la(s) 22.04.54.png]]
 
-## Tradeoff and Model complexity
+***
+
+## Trade-off and Model complexity
+
+
 ![[Captura de Pantalla 2022-02-12 a la(s) 22.07.40.png]]
 
 - Use the results from the `training` and the `test`/`validation` to identify ==Bias== or ==Variance==.
 ![[Captura de Pantalla 2022-02-12 a la(s) 22.08.42.png]]
 
 ==High Bias==
-- Low training and testing performance
+- **Low** `training` and testing `performance`
 
 ==High Variance==
-- High performance on `trianing`, but bad performance on `testing`
+- **High** performance on `trianing`, but **bad** performance on `testing`
 
 From the point of view of the amount of error:
 ![[Pasted image 20220212221243.png]]
 
-## Cross-Validation
+***
+
+# Cross-Validation
 
 - **Training set** => Data used to train the model
 - **Validation set** => Data used to make decisions on the models
@@ -53,11 +61,12 @@ for train_indices, test_indices in kf:
 ```
 
 ## Learning Curves
-Determines how much data is required to reduce the error (improve the model performance).
-- A learning curve shows the **validation** and **training score** of an estimator for varying numbers of training samples.
-- It is a tool to find out how much we benefit from adding more training data and whether the estimator suffers more from a variance error or a bias error.
 
-- Measures the Model Performance (or Amount of Error) in the $y$ axis, as a function of the ==size== of the `training` set
+- A learning curve shows the **validation** and **training score** of an estimator for **varying numbers of training samples**.
+	- Determines how much data is required to reduce the error (improve the model performance).
+- It is a tool to find out *how much we benefit from adding more training data* and whether the estimator suffers more from a variance error or a bias error.
+
+#Learning-curves display the Model Performance (or Amount of Error) in the $y$ axis, as a function of the ==size== of the `training` set
 
 ![[Captura de Pantalla 2022-02-12 a la(s) 22.25.41.png]]
 
@@ -96,6 +105,14 @@ def draw_learning_curves(X, y, estimator, num_trainings):
 
     plt.show()
 ```
+
+***
+
+# Hyperparameter Tuning
+Related notes:
+- [[Hyperparameter Tuning]]
+- [[Hyperparameter_tunning_in_python]]
+- [[9. W3 - Adjusting the learning rate dynamically]]
 
 ## Grid Search
 1. Import `GridSearchCV`

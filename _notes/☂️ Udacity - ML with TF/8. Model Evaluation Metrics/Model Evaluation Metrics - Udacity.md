@@ -56,7 +56,7 @@ The usual layout of a #ConfusionMatrix
 
 
 ### Type 1 and Type 2 Errors
-The classic example to understand ==Type 1== and ==Type 2== `Errors`
+The classic example to understand ==Type 1== ( #Type1Error ) and ==Type 2== ( #Type2Error ) `Errors`
 
 <mark style="background-color: #FFA793">False Positives</mark> =>
 - 🚨 **Type Error 1**: In the medical example this is when we misdiagnose a healthy patient as sick.
