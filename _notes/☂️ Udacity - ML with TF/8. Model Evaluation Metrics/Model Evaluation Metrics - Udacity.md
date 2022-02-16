@@ -58,7 +58,7 @@ The usual layout of a #ConfusionMatrix
 ### Type 1 and Type 2 Errors
 The classic example to understand ==Type 1== and ==Type 2== `Errors`
 
-<mark style="background-color: #FFA793 !important">False Positives</mark> =>
+<mark style="background-color: #FFA793">False Positives</mark> =>
 - 🚨 **Type Error 1**: In the medical example this is when we misdiagnose a healthy patient as sick.
 <mark style="background-color: #FFA793 !important">False Negatives</mark>
 - 🚨 **Type Error 2**: Labeling as Negative a Positive case -> Misdiagnose as sick a healthy patient
@@ -89,14 +89,17 @@ from sklearn.metrics import accuracy_score
 
 ## Precision and Recall
 
-#### Precision
-<mark style='background-color: #FFA793 !important'>Recall</mark>
-- Try to identify as `TRUE POSITIVES` all of the positives in the dataset
-	- Find **all** the sick people
-- In a medical example -> A `False Negative` is worse
-	- So a higher ==Recall== is needed
+### Precision
+<mark style='background-color: #FFA793'>Recall</mark>
+- Focused on how many `TRUE POSITIVES` ($TP$) are among of the **PREDICTED** Positives ($TP + FP$)
+- Try to maximize the number of `TRUE POSITIVES` inside the samples predicted as POSITIVES
+	- In the spam example -> a `False Positive` is worse
+		- So a higher precision is needed
+		- It is not necessary to find all positives
 
-> *How many of the POSITIVES PREDICTED are really POSITIVES?*
+#### Precision Formula
+
+*How many of the POSITIVES PREDICTED are really POSITIVES?*
 
 $$\mathbf{Precision} = \frac{TP}{TP + FP}$$
 
@@ -107,30 +110,32 @@ $$\mathbf{Precision} = \frac{TP}{TP + FP}$$
 > What is the precision of the linear model above? Please write the number as a decimal, like **0.45** or as a fraction, like **3/5**.
 > ==Answer== -> 6 /8 = 0.75
 
-#### Recall
-<mark style='background-color: #93EBFF !important'>Precision</mark>
-- Try to maximize the number of `TRUE POSITIVES` inside the samples predicted as POSITIVES
-	- In the spam example -> a `False Positive` is worse
-		- So a higher precision is needed
-		- It is not necessary to find all positives
+### Recall
+<mark style='background-color: #93EBFF !important'>Recall</mark>
+- Try to recall as many as possible `TRUE POSITIVES` from among the whole set of `POSITIVES` in the dataset
+	- Example => Find **all** the sick people
+	- In a medical example -> A `False Negative` is worse
+		- So a higher ==Recall== is needed
 
-> *How many of POSITIVES PREDICTED did I found from all possible POSITIVES inside the dataset?*
-> 
+
+#### Recall formula
+*How many of POSITIVES PREDICTED did I found from all possible POSITIVES inside the dataset?*
 > *Out of all POSITIVES, how many did we correctly classify as POSITIVES?*
 
-$$\mathbf{Precision} = \frac{TP}{TP + FP}$$
-
+$$\mathbf{Recall} = \frac{TP}{TP + FN} = \frac{TP}{P}$$
 
 ##### Exercise
 
 ![[Pasted image 20220209212131.png]]
 
-> What is the recall of the linear model above? Please write your number as a decimal, like **0.45** or as a fraction, like **3/5**.
+_What is the recall of the linear model above? Please write your number as a decimal, like **0.45** or as a fraction, like **3/5**._
 > ==Answer== -> 0.857
 
+***
+
 ## F1-score
-- Combination ==Recall== and ==Precisiton==
-- `F1-score` is the <mark style='background-color: #FFA793 !important'>Harmonic Mean</mark>
+- Combination ==Recall== and ==Precision==
+- `F1-score` is the <mark style='background-color: #FFA793'>Harmonic Mean</mark>
 	- It is always lower than the arithmetic mean
 	- Penalizes more lower values
 
