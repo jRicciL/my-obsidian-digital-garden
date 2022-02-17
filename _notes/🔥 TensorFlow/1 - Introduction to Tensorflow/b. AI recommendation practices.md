@@ -1,0 +1,39 @@
+---
+---
+
+#Network  AI recommended practices
+
+- Use a human-centered design approach
+- Identify multiple **metrics** to assess `training` and `monitoring`
+	- Consider metrics including feedback from user surveys
+	- Quentities that track overall system performance
+	- short and long-term product health
+	- false positive and false negative rates sliced across different subgroups
+- When possible, directly examine your raw data
+	- Does the data contains any mistakes?
+		- Missing values, incorrect labels
+	- is the data sampled in a way that represents your users correclty?
+	- Is the data accurate
+	- Training-serving skew
+		- The difference between performance during training and performance during serving
+		- During training try to identify potential skews and work to address them
+		- During evaluation -> continue to try to get evaluation data that is as representative as possible of the deployed setting.
+	- Are any features in the model redundant or unnecessary?
+		- Use the simplest model that meets the performance goals
+	- For supervised systems
+		- Consider the relationship between the data labels and the items you're trying to predict
+		- Use $X$ as a proxy to predict $y$ ->
+			- In which cases is the gap between $X$ and $y$ problematic
+	- Data bias is another important consideration
+-  Understand the limitations of your dataset and model
+    -   A model trained to detect correlations should not be used to make causal inferences, or imply that it can. 
+		-   E.g., your model may learn that people who buy basketball shoes are taller on average, but this does not mean that a user who buys basketball shoes will become taller as a result.
+    -   Machine learning models today are largely a reflection of the patterns of their training data. 
+		-   It is therefore important to communicate the scope and coverage of the training...
+			-   hence clarifying the capability and limitations of the models. 
+			-   E.g., a shoe detector trained with stock photos can work best with stock photos but has limited capability when tested with user-generated cellphone photos.
+    -   Communicate limitations to users where possible. 
+		-   For example, an app that uses ML to recognize specific bird species might communicate that the model was trained on a small set of images from a specific region of the world. 
+	-   By better educating the user, you may also improve the feedback provided from users about your feature or application.
+-   Test, test, test
+-   Continue to monitor and update the system after deployment

@@ -1,3 +1,6 @@
+---
+---
+
 Here is what you need to know about the Final Assessment:
 
 -   The Final Assessment will be opened on **Feb 11, 2022 at 10 am PT** for all learners, and will close on **February 18, 2022 at 10 am PT.** There will be no other dates available to sit for the assessment.

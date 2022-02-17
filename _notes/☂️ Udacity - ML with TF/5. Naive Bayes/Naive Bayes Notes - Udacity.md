@@ -1,3 +1,6 @@
+---
+---
+
 # Naive Bayes
 
 🔥 Check [[W4 - Naive Bayes]]

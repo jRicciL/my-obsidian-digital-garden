@@ -1,3 +1,6 @@
+---
+---
+
 # The Perceptron Algorithm
 
 ## Perceptrons as Logical Operators
