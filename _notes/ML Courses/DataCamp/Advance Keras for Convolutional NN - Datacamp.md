@@ -15,7 +15,7 @@
 - #One-hot-encoding
 - Multi-class classification
 
-### Classification with Keras
+### Classification with #Keras
 
 ```python
 from keras.layers import Dense
@@ -69,8 +69,8 @@ model.evaluate(
 - Pixels in most images are not independent in images
 
 #### The convolution
-- Uses a kernel
-- Uses a window
+- Uses a `kernel`
+- Uses a `window` -> `stride`
 - Multiplies the kernel rolling the window over the image
 
 Application of a convolution -> ==Feature map==
@@ -99,7 +99,7 @@ kernel = np.array([[-1,-1, -1],
 
 ### Implementing convolutions in Keras
 
-Covolutional layer in Keras
+- ==Covolutional== layer in #Keras
 
 ```python
 from keras.layers import Conv2D
@@ -122,10 +122,10 @@ from keras.layers import Dense, Conv2D, Flatten
 model = Sequential()
 model.add(
 	Conv2D(
-		   10, # Number of units 
-		   kernel_size=3, 
-		   activation='relu',
-		   input_shape=(img_rows, img_cols, 1) 
+		   filters = 10, # Number of units 
+		   kernel_size = 3, 
+		   activation  = 'relu',
+		   input_shape = (img_rows, img_cols, 1) 
 		  ))
 
 # The flatten layer serves as a conector between
@@ -154,7 +154,10 @@ model.fit(
 		 epoch=3)
 
 model.evaluate(
-	test_data, test_labels, batch_size=10)
+	test_data, 
+	test_labels, 
+	batch_size = 10
+)
 ```
 
 ### Tweaking your convolutions

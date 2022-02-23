@@ -1,0 +1,421 @@
+<body>
+    <style>
+        .links line {
+          stroke: rgb(243, 102, 102);
+          opacity: 0.9;
+        }
+      
+        .nodes circle {
+          cursor: pointer;
+          fill: #7ef6ff;
+          transition: all 0.15s ease-out;
+      
+        }
+      
+        .nodes:hover {
+          fill: rgb(232, 53, 98);
+        }
+      
+        .text text {
+          cursor: pointer;
+          font-family: Helvetica, sans-serif;
+          fill: #333;
+          letter-spacing: normal !important;
+          opacity: 0.6;
+          text-shadow: -1px -1px 0 #fafafabb, 1px -1px 0 #fafafabb, -1px 1px 0 #fafafabb, 1px 1px 0 #fafafabb;
+        }
+      
+        .text text:hover{
+          opacity: 1;
+          fill: #000;
+        }
+      
+        .nodes [active],
+        .text [active] {
+          cursor: pointer;
+          fill: rgb(232, 169, 53);
+          opacity: 1;
+        }
+      
+        .inactive {
+          opacity: 0.1;
+          transition: all 0.15s ease-out;
+        }
+      
+        #graph-wrapper {
+          background: #ffffff;
+          border-radius: 4px;
+          height: auto;
+        }
+      </style>
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"
+        integrity="sha512-FHsFVKQ/T1KWJDGSbrUhTJyS1ph3eRrxI228ND0EGaEp6v4a/vGwPWd3Dtd/+9cI7ccofZvl/wulICEurHN1pg=="
+        crossorigin="anonymous"></script>
+      
+      <div id="graph-wrapper">
+        <script>
+          const MINIMAL_NODE_SIZE = 8;
+          const MAX_NODE_SIZE = 12;
+          const ACTIVE_RADIUS_FACTOR = 1.6;
+          const STROKE = 2;
+          const FONT_SIZE = 12;
+          const TICKS = 100;
+          const FONT_BASELINE = 40;
+          const MAX_LABEL_LENGTH = 30;
+      
+          const graphData = {"edges":[{"source":"82659995046236864","target":"1763540102438594294"},{"source":"69249139897773368537278861456436837530673015453550052","target":"1763540102438594294"},{"source":"36040492041623211766794889694678019","target":"74718412379609010466"},{"source":"372784629772982050706746201056684118","target":"96491138942527441464949049"},{"source":"855176621391716876411805523827867989694900310","target":"96491138942527441464949049"},{"source":"44707664883861262813579726395042940566687620556886","target":"11387769762940756281090305908152791"},{"source":"372784629772982050706746201056684118","target":"428207868665553873945632622271865303"},{"source":"18559357945486251157049183342947887190","target":"677445409070724361540574183168106562233128135"},{"source":"37883617181113591926099110180633248565700862932837707513830","target":"677445409070724361540574183168106562233128135"},{"source":"357275719340217929866488581","target":"322563736115991251345581418629387463"},{"source":"428207868665553873945632622271865303","target":"4757080408798878164029847"},{"source":"372784629772982050706746201056684118","target":"4757080408798878164029847"},{"source":"855176621391716876411805523827867989694900310","target":"4757080408798878164029847"},{"source":"69249139897773368537278861456436837530673015453550052","target":"4757080408798878164029847"},{"source":"372784629772982050706746201056684118","target":"82659995046236864"},{"source":"4975140455185487510929373161558","target":"82659995046236864"},{"source":"962997331630488993777029970279529605196","target":"315512351653355707968829167914284"},{"source":"2573060067791572195562892991029898554791544709921667765281132","target":"17089841711823327080734589545599984839"},{"source":"3403929265984681129092157","target":"2573060067791572195562892991029898554791544709921667765281132"},{"source":"315512351653355707968829167914284","target":"2573060067791572195562892991029898554791544709921667765281132"},{"source":"8155393016006049810006083","target":"2573060067791572195562892991029898554791544709921667765281132"},{"source":"2047359037771105017040952204954811962108096440396","target":"2573060067791572195562892991029898554791544709921667765281132"},{"source":"29912211531841","target":"29912211531841"},{"source":"69249139897773368537278861456436837530673015453550052","target":"14529134790624263375892233104213108822"},{"source":"69249139897773368537278861456436837530673015453550052","target":"29762387665701064134624664940784848402524246"},{"source":"69249139897773368537278861456436837530673015453550052","target":"179885837386012742873606230"},{"source":"69249139897773368537278861456436837530673015453550052","target":"372784629772982050706746201056684118"},{"source":"177341778002010353199190","target":"44707664883861262813579726395042940566687620556886"},{"source":"69249139897773368537278861456436837530673015453550052","target":"44707664883861262813579726395042940566687620556886"},{"source":"14687875123918273712067226207756171410531284380","target":"44707664883861262813579726395042940566687620556886"},{"source":"69249139897773368537278861456436837530673015453550052","target":"4975140455185487510929373161558"},{"source":"69249139897773368537278861456436837530673015453550052","target":"19889429553494317971639301316651028398170189015126"},{"source":"69249139897773368537278861456436837530673015453550052","target":"11208968019121751014286369068968022"},{"source":"177342266189202526152790","target":"177341778002010353199190"},{"source":"69249139897773368537278861456436837530673015453550052","target":"177341778002010353199190"},{"source":"177341778002010353199190","target":"177342266189202526152790"},{"source":"69249139897773368537278861456436837530673015453550052","target":"177342266189202526152790"},{"source":"69249139897773368537278861456436837530673015453550052","target":"7055217359651924990196243483551830"},{"source":"17087651061339311753707770091853736022","target":"855176621391716876411805523827867989694900310"},{"source":"69249139897773368537278861456436837530673015453550052","target":"855176621391716876411805523827867989694900310"},{"source":"855176621391716876411805523827867989694900310","target":"17087651061339311753707770091853736022"},{"source":"69249139897773368537278861456436837530673015453550052","target":"17087651061339311753707770091853736022"},{"source":"69249139897773368537278861456436837530673015453550052","target":"18559357945486251157049183342947887190"},{"source":"69249139897773368537278861456436837530673015453550052","target":"7467711543354889617974638401529942"},{"source":"267830456632262038791570626519","target":"620542"},{"source":"19889429553494317971639301316651028398170189015126","target":"620542"},{"source":"4227615982154211257","target":"620542"},{"source":"28925069739690938362918521642608699176362346007859454","target":"620542"},{"source":"366018425989646386197988","target":"620542"},{"source":"2269285104277433063602483631678017","target":"620542"},{"source":"8425524324810280103938947088","target":"620542"},{"source":"357275719340217929866488581","target":"620542"},{"source":"18714975067176483348401907730589128","target":"620542"},{"source":"918070392148895121583975599358845938218","target":"620542"},{"source":"3403929265984681129092157","target":"2456305632866768855"},{"source":"315512351653355707968829167914284","target":"2456305632866768855"},{"source":"8155393016006049810006083","target":"2456305632866768855"},{"source":"2047359037771105017040952204954811962108096440396","target":"2456305632866768855"},{"source":"114276947","target":"58442237956"},{"source":"139258211825147139579436","target":"5358028968359336249445"},{"source":"46349171440468732","target":"46349171440468732"},{"source":"11208968019121751014286369068968022","target":"4228884725715967924"},{"source":"44707664883861262813579726395042940566687620556886","target":"25969411749255437847926671110606286918720"},{"source":"9203917001092396394325557164","target":"5481161549170940876717"},{"source":"20755764345307610477980","target":"42117930760342480036866850692068488"},{"source":"298972026026519989583764","target":"42117930760342480036866850692068488"},{"source":"2047359037771105017040952204954811962108096440396","target":"8797113980971084"},{"source":"656445649314267967095261181697474860","target":"1273551883498397761619"},{"source":"14998308394","target":"1273551883498397761619"},{"source":"2269285104277433063602483631678017","target":"8425524324810280103938947088"},{"source":"656445649314267967095261181697474860","target":"1073482142104878839101624484312552115002965"},{"source":"855176621391716876411805523827867989694900310","target":"65369790229623812825664568601260"},{"source":"84658937867","target":"81399341406641337486241346548"},{"source":"285264644458949595789135019729","target":"81399341406641337486241346548"},{"source":"37883617181113591926099110180633248565700862932837707513830","target":"3301637906820655237932176317768"},{"source":"18559357945486251157049183342947887190","target":"37883617181113591926099110180633248565700862932837707513830"},{"source":"3237704257748764825660824023","target":"563272349060554234044130727259070315397305492"},{"source":"2510279812710280","target":"563272349060554234044130727259070315397305492"},{"source":"372784629772982050706746201056684118","target":"3704757994357034463211372"},{"source":"18559357945486251157049183342947887190","target":"6670398760433916529920290938924"},{"source":"37883617181113591926099110180633248565700862932837707513830","target":"6670398760433916529920290938924"},{"source":"372784629772982050706746201056684118","target":"79251450368879746"},{"source":"372784629772982050706746201056684118","target":"2510279812710280"},{"source":"3237704257748764825660824023","target":"2510279812710280"},{"source":"429027757424886385161496231278224","target":"2510279812710280"},{"source":"63767093682496871561277574795284459949059","target":"2510279812710280"},{"source":"35558555033522579521069689064286284","target":"2510279812710280"},{"source":"11584672198259687424928073595888806579690486155108684415447","target":"2510279812710280"},{"source":"372784629772982050706746201056684118","target":"4674261794727130536407"},{"source":"177341778002010353199190","target":"4674261794727130536407"},{"source":"63767093682496871561277574795284459949059","target":"429027757424886385161496231278224"},{"source":"2260713679611478557496250968","target":"75732000103000"},{"source":"11208968019121751014286369068968022","target":"2843151727832067734001303949097847027374"},{"source":"1903796256764723839075913943633024983","target":"419668252977878847013050112213154093669846405121808"},{"source":"19196576189867603434149602900171525","target":"62289395423118971086324012"},{"source":"588086053203416211890203232","target":"114276947"},{"source":"1041218379819527396801266796319662","target":"114276947"},{"source":"1903796256764723839075913943633024983","target":"114276947"},{"source":"9261216947730534927630538","target":"19678204251718727091825368762162308"},{"source":"349317058230271528982284812","target":"19678204251718727091825368762162308"},{"source":"349317058230271528982284812","target":"9261216947730534927630538"},{"source":"20884562424258556205434814764","target":"13148686328064289763697496535"},{"source":"588086053203416211890203232","target":"13148686328064289763697496535"},{"source":"167378346251","target":"13148686328064289763697496535"},{"source":"81594620876921611320739049591097589785301463","target":"13148686328064289763697496535"},{"source":"13148686328064289763697496535","target":"20884562424258556205434814764"},{"source":"588086053203416211890203232","target":"20884562424258556205434814764"},{"source":"167378346251","target":"20884562424258556205434814764"},{"source":"81594620876921611320739049591097589785301463","target":"20884562424258556205434814764"},{"source":"167378346251","target":"588086053203416211890203232"},{"source":"81594620876921611320739049591097589785301463","target":"588086053203416211890203232"},{"source":"167378346251","target":"36040492041623211766794889694678019"},{"source":"63767093682496871561277574795284459949059","target":"36040492041623211766794889694678019"},{"source":"63767093682496871561277574795284459949059","target":"63767093682496871561277574795284459949059"},{"source":"63767093682496871561277574795284459949059","target":"27912392340544245011"},{"source":"1041218379819527396801266796319662","target":"27912392340544245011"},{"source":"1301859494802610949","target":"699851653148368"},{"source":"19196576189867603434149602900171525","target":"1301859494802610949"},{"source":"285264644458949595789135019729","target":"909553434274288234269563901418288"},{"source":"301552809686164194044337706","target":"8155393016006049810006083"},{"source":"656445649314267967095261181697474860","target":"301552809686164194044337706"},{"source":"14998308394","target":"301552809686164194044337706"},{"source":"11584672198259687424928073595888806579690486155108684415447","target":"301552809686164194044337706"},{"source":"656445649314267967095261181697474860","target":"918070392148895121583975599358845938218"},{"source":"81399341406641337486241346548","target":"64892587217002340780547033221777271392"},{"source":"285264644458949595789135019729","target":"64892587217002340780547033221777271392"},{"source":"8155393016006049810006083","target":"64892587217002340780547033221777271392"},{"source":"1041218379819527396801266796319662","target":"64892587217002340780547033221777271392"},{"source":"356146979","target":"5122781119522598217052758193044023611845443"},{"source":"53364830415218857847205858258711964","target":"5122781119522598217052758193044023611845443"},{"source":"14998308394","target":"356146979"},{"source":"656445649314267967095261181697474860","target":"14998308394"},{"source":"301552809686164194044337706","target":"14998308394"},{"source":"962997331630488993777029970279529605196","target":"2047359037771105017040952204954811962108096440396"},{"source":"2047359037771105017040952204954811962108096440396","target":"962997331630488993777029970279529605196"},{"source":"35558555033522579521069689064286284","target":"3517829073194"},{"source":"28550986817598346614574265667934","target":"3517829073194"},{"source":"85784303056352724112430232141029883819711280","target":"373817764875668834033"},{"source":"11584672198259687424928073595888806579690486155108684415447","target":"635828863044447923879078877"},{"source":"53364830415218857847205858258711964","target":"635828863044447923879078877"}],"nodes":[{"id":"1763540102438594294","path":"/decision-tree","label":"Decision Tree"},{"id":"74718412379609010466","path":"/frobenius-norm","label":"Frobenius Norm"},{"id":"96491138942527441464949049","path":"/c4-gradient-descent","label":"C4 Gradient Descent"},{"id":"11387769762940756281090305908152791","path":"/nn-weigth-initialization","label":"Nn Weigth Initialization"},{"id":"91642289753465172","path":"/p2-chapter-10","label":"P2 Chapter 10"},{"id":"2510279798625430","path":"/optimality","label":"Optimality"},{"id":"428207868665553873945632622271865303","path":"/optimization-formulation","label":"Optimization Formulation"},{"id":"39891328604756787","path":"/aws-and-boto3","label":"Aws And Boto3"},{"id":"302191577649295416480501147501639674020643","path":"/advance-keras-convolutional-nn","label":"Advance Keras Convolutional Nn"},{"id":"199558275772874111870153004650090980","path":"/biomedical-image-analysis","label":"Biomedical Image Analysis"},{"id":"3403929265984681129092157","path":"/feature-eng-for-nlp","label":"Feature Eng For Nlp"},{"id":"677445409070724361540574183168106562233128135","path":"/hyperparameter-tunning-in-python","label":"Hyperparameter Tunning In Python"},{"id":"322563736115991251345581418629387463","path":"/image-processing-in-python","label":"Image Processing In Python"},{"id":"92628788972804534639739104914858004956629797234193867691693091","path":"/intermediate-data-visualization-with-seaborn","label":"Intermediate Data Visualization With Seaborn"},{"id":"455567066489431418369063519753147536583","path":"/kaggle-competition-in-python","label":"Kaggle Competition In Python"},{"id":"4757080408798878164029847","path":"/linear-regression","label":"Linear Regression"},{"id":"82659995046236864","path":"/ml-with-spark","label":"Ml With Spark"},{"id":"315512351653355707968829167914284","path":"/nlp-feature-engineering","label":"Nlp Feature Engineering"},{"id":"1258887748781765689017327180688209733084386288839","path":"/practicing-coding-interview-python","label":"Practicing Coding Interview Python"},{"id":"17089841711823327080734589545599984839","path":"/regular-expressions-python","label":"Regular Expressions Python"},{"id":"23858274720980882631633374899948281484487","path":"/time-series-analysis-in-python","label":"Time Series Analysis In Python"},{"id":"2573060067791572195562892991029898554791544709921667765281132","path":"/introduction-to-natural-lenguage-processing","label":"Introduction To Natural Lenguage Processing"},{"id":"267830456632262038791570626519","path":"/pyspark-introduction","label":"Pyspark Introduction"},{"id":"233018846778214174628419460044","path":"/ml-and-data-by-andrew-ng","label":"Ml And Data By Andrew Ng"},{"id":"29912211531841","path":"/alphafold","label":"Alphafold"},{"id":"29169392499","path":"/deepbar","label":"Deepbar"},{"id":"1576357912616896","path":"/first-steps","label":"First Steps"},{"id":"3818313835680527385076","path":"/md-trayectories","label":"Md Trayectories"},{"id":"14529134790624263375892233104213108822","path":"/nanodegree-details-udacity","label":"Nanodegree Details Udacity"},{"id":"29762387665701064134624664940784848402524246","path":"/setting-up-your-computer-udacity","label":"Setting Up Your Computer Udacity"},{"id":"179885837386012742873606230","path":"/ml-overview-udacity","label":"Ml Overview Udacity"},{"id":"372784629772982050706746201056684118","path":"/linear-regression-udacity","label":"Linear Regression Udacity"},{"id":"44707664883861262813579726395042940566687620556886","path":"/perceptron-algorithms-notes-udacity","label":"Perceptron Algorithms Notes Udacity"},{"id":"4975140455185487510929373161558","path":"/decision-trees-udacity","label":"Decision Trees Udacity"},{"id":"19889429553494317971639301316651028398170189015126","path":"/bayesian-inference-solution-udacity","label":"Bayesian Inference Solution Udacity"},{"id":"11208968019121751014286369068968022","path":"/naive-bayes-notes-udacity","label":"Naive Bayes Notes Udacity"},{"id":"177341778002010353199190","path":"/svm-notes-udacity","label":"Svm Notes Udacity"},{"id":"177342266189202526152790","path":"/svm-recap-udacity","label":"Svm Recap Udacity"},{"id":"7055217359651924990196243483551830","path":"/ensemble-methods-udacity","label":"Ensemble Methods Udacity"},{"id":"855176621391716876411805523827867989694900310","path":"/model-evaluation-metrics-udacity","label":"Model Evaluation Metrics Udacity"},{"id":"17087651061339311753707770091853736022","path":"/recap-notes-metrics-udacity","label":"Recap Notes Metrics Udacity"},{"id":"18559357945486251157049183342947887190","path":"/training-and-tuning-udacity","label":"Training And Tuning Udacity"},{"id":"7467711543354889617974638401529942","path":"/final-assessment-udacity","label":"Final Assessment Udacity"},{"id":"69249139897773368537278861456436837530673015453550052","path":"/udacity-tensorflow-schoolarship-notes","label":"Udacity Tensorflow Schoolarship Notes"},{"id":"620542","path":"/data","label":"Data"},{"id":"1169574921892","path":"/examples","label":"Examples"},{"id":"2456305632866768855","path":"/introduction","label":"Introduction"},{"id":"101453997636774201002","path":"/lesson-outline","label":"Lesson Outline"},{"id":"2159510993564704794","path":"/generative-ai","label":"Generative Ai"},{"id":"63780860352124","path":"/ml-with-aws","label":"Ml With Aws"},{"id":"1771535444456987764012","path":"/advanced-topics","label":"Advanced Topics"},{"id":"1360769238907048","path":"/decorators","label":"Decorators"},{"id":"77242927308369203692","path":"/gaussian-class","label":"Gaussian Class"},{"id":"68195846801951150","path":"/inheritance","label":"Inheritance"},{"id":"3802882460118152082926","path":"/making-a-package","label":"Making A Package"},{"id":"546050666890151131638217193074478347756","path":"/object-oriented-programming","label":"Object Oriented Programming"},{"id":"7439909221253729492590608928","path":"/python-environments","label":"Python Environments"},{"id":"58442237956","path":"/quizzes","label":"Quizzes"},{"id":"11054525389151724335798319208842224899660","path":"/documentation-and-docstrings","label":"Documentation And Docstrings"},{"id":"139258211825147139579436","path":"/model-versioning","label":"Model Versioning"},{"id":"28703108965035490584586277835502682180655575","path":"/refactoring-and-modularization","label":"Refactoring And Modularization"},{"id":"5358028968359336249445","path":"/version-control","label":"Version Control"},{"id":"46349171440468732","path":"/code-reviews","label":"Code Reviews"},{"id":"1656585590","path":"/readme","label":"Readme"},{"id":"5017000786488371902492","path":"/testing-and-logs","label":"Testing And Logs"},{"id":"509510415817687795317267446610421846","path":"/terminology-ml-aws-udacity","label":"Terminology Ml Aws Udacity"},{"id":"4227615982154211257","path":"/w4-assingment","label":"W4 Assingment"},{"id":"152203317943353967598","path":"/w4-data-leakage","label":"W4 Data Leakage"},{"id":"9203917001092396394325557164","path":"/w4-gradient-boosting","label":"W4 Gradient Boosting"},{"id":"4228884725715967924","path":"/w4-naive-bayes","label":"W4 Naive Bayes"},{"id":"25969411749255437847926671110606286918720","path":"/w4-neuralnetworks-highlights","label":"W4 Neuralnetworks Highlights"},{"id":"5481161549170940876717","path":"/w4-random-forest","label":"W4 Random Forest"},{"id":"8529589867629958009777481843436888110","path":"/docker-intorduction-course","label":"Docker Intorduction Course"},{"id":"39412631157676957488970532622444404733064","path":"/1-creating-and-using-containers","label":"1. Creating And Using Containers"},{"id":"42117930760342480036866850692068488","path":"/2-first-steps-on-containers","label":"2. First Steps On Containers"},{"id":"20755764345307610477980","path":"/3-docker-networks","label":"3. Docker Networks"},{"id":"298972026026519989583764","path":"/1-container-images","label":"1. Container Images"},{"id":"11927450729667922540","path":"/2-image-tagging","label":"2. Image Tagging"},{"id":"74745861260359306640327117836962447074","path":"/3-building-images-dcokerfile","label":"3. Building Images Dcokerfile"},{"id":"37770032733518940158623636","path":"/4-quiz-docker-images","label":"4. Quiz Docker Images"},{"id":"28925069739690938362918521642608699176362346007859454","path":"/container-lifetime-and-persistent-data","label":"Container Lifetime And Persistent Data"},{"id":"14687875123918273712067226207756171410531284380","path":"/a-the-hello-world-of-neural-networks","label":"A. The Hello World Of Neural Networks"},{"id":"9127317420180713000100055489119616261204","path":"/b-ai-recommendation-practices","label":"B. Ai Recommendation Practices"},{"id":"434371722724043740990861237208804802155162519","path":"/b-intorduction-to-computer-vision","label":"B. Intorduction To Computer Vision"},{"id":"366018425989646386197988","path":"/1-nlp-general-notes","label":"1. Nlp General Notes"},{"id":"8797113980971084","path":"/2-embeddings","label":"2. Embeddings"},{"id":"1084756553721381944397892851","path":"/3-sarcasm-classifier","label":"3. Sarcasm Classifier"},{"id":"2269285104277433063602483631678017","path":"/4-pre-tokenized-datasets-1","label":"4. Pre Tokenized Datasets 1"},{"id":"35550870136839008131888","path":"/5-sequence-models","label":"5. Sequence Models"},{"id":"696227833989779","path":"/6-using-a-cnn","label":"6. Using A Cnn"},{"id":"1273551883498397761619","path":"/7-gru-lstm-and-cnn","label":"7. Gru Lstm And Cnn"},{"id":"413263537590150790885616646370119450893404838704","path":"/8-generative-models-sequence-models","label":"8. Generative Models Sequence Models"},{"id":"3299616155438725577109962","path":"/ex-bbc-news-archive","label":"Ex. Bbc News Archive"},{"id":"8425524324810280103938947088","path":"/tensorflow-datasets","label":"📦 Tensorflow Datasets"},{"id":"42440815934164294662843706031805196247","path":"/1-w1-sequences-and-prediction","label":"1. W1 Sequences And Prediction"},{"id":"1073482142104878839101624484312552115002965","path":"/10-w3-rnn-adjusted-learning-rated","label":"10. W3 Rnn Adjusted Learning Rated"},{"id":"656445649314267967095261181697474860","path":"/11-w3-lstm-adjusted-learning","label":"11. W3 Lstm Adjusted Learning"},{"id":"84658937867","path":"/12-w3-quiz","label":"12. W3 Quiz"},{"id":"84095344026814807030506674987363175150580","path":"/2-w1-introduction-to-time-series","label":"2. W1 Introduction To Time Series"},{"id":"87345980293865905607555376034647193901","path":"/3-w1-train-validation-and-test","label":"3. W1 Train, Validation And Test"},{"id":"65369790229623812825664568601260","path":"/4-w1-performance-metrics","label":"4. W1 Performance Metrics"},{"id":"60750958337976021339142899628","path":"/5-w1-basic-forecasting","label":"5. W1 Basic Forecasting"},{"id":"1974335342493184726946722804","path":"/6-w2-nn-for-time-series","label":"6. W2 Nn For Time Series"},{"id":"81399341406641337486241346548","path":"/7-w3-rnn-for-time-series","label":"7. W3 Rnn For Time Series"},{"id":"3301637906820655237932176317768","path":"/8-w3-keras-lambda-layers","label":"8. W3 Keras Lambda Layers"},{"id":"37883617181113591926099110180633248565700862932837707513830","path":"/9-w3-adjusting-the-learning-rate-dynamically","label":"9. W3 Adjusting The Learning Rate Dynamically"},{"id":"285264644458949595789135019729","path":"/rnn-and-keras-datacamp","label":"Rnn And Keras Datacamp"},{"id":"14151645370182746532665127845486039","path":"/tensoflow-certification","label":"Tensoflow Certification"},{"id":"176483469251421488060375","path":"/sql-introduction","label":"Sql Introduction"},{"id":"270374069446014262537161990731167917507","path":"/c1-introduction-to-sql-server","label":"C1 Introduction To Sql Server"},{"id":"8233962358149238554998252542","path":"/sql-aggregating-data","label":"Sql Aggregating Data"},{"id":"182818712851034226359155303717996","path":"/docker-for-app-packaging","label":"Docker For App Packaging"},{"id":"3237704257748764825660824023","path":"/batch-normalization","label":"Batch Normalization"},{"id":"6448594828990692367739158551828892","path":"/deeplearning-frameworks","label":"Deeplearning Frameworks"},{"id":"563272349060554234044130727259070315397305492","path":"/exponentially-weighted-averages","label":"Exponentially Weighted Averages"},{"id":"3704757994357034463211372","path":"/gradient-checking","label":"Gradient Checking"},{"id":"6670398760433916529920290938924","path":"/hyperparameter-tuning","label":"Hyperparameter Tuning"},{"id":"79251450368879746","path":"/local-optima","label":"Local Optima"},{"id":"14251052639000753936535610687465709015","path":"/multiclass-classification","label":"Multiclass Classification"},{"id":"2510279812710280","path":"/optimizers","label":"Optimizers"},{"id":"4674261794727130536407","path":"/regularization","label":"Regularization"},{"id":"429027757424886385161496231278224","path":"/w3-exercicie-tensorflow","label":"W3 Exercicie Tensorflow"},{"id":"75732000103000","path":"/questions","label":"🤓 Questions"},{"id":"5951979768861826","path":"/1-ml-strategy","label":"1. Ml Strategy"},{"id":"22198451901245791471051005","path":"/2-setting-up-the-goal","label":"2. Setting Up The Goal"},{"id":"2843151727832067734001303949097847027374","path":"/3-improving-model-performance","label":"3. Improving Model Performance"},{"id":"608676127691738560015974133910013469457327591553648823569442","path":"/4-ex-bird-recognition-in-the-city-of-peacetopia","label":"4. Ex Bird Recognition In The City Of Peacetopia"},{"id":"922900996359293325796","path":"/5-error-analysis","label":"5. Error Analysis"},{"id":"419668252977878847013050112213154093669846405121808","path":"/6-mismatched-training-and-dev-test-sets","label":"6. Mismatched Training And Dev Test Sets"},{"id":"62289395423118971086324012","path":"/7-transfer-learning","label":"7. Transfer Learning"},{"id":"3492969347991038849664529875244","path":"/9-end-2-end-deep-learning","label":"9. End 2 End Deep Learning"},{"id":"114276947","path":"/1-w1-cnn","label":"1. W1 Cnn"},{"id":"226543910906546663434949","path":"/10-w2-efficientnet","label":"10. W2 Efficientnet"},{"id":"1428913394504374431690919203691767039729296848","path":"/11-w2-practical-advice-for-convnets","label":"11. W2 Practical Advice For Convnets"},{"id":"401134824812869277428857245573","path":"/12-w2-assignment-resnet","label":"12. W2. Assignment Resnet"},{"id":"19196576189867603434149602900171525","path":"/13-w2-assignment-mobilenet","label":"13. W2. Assignment Mobilenet"},{"id":"19678204251718727091825368762162308","path":"/14-w3-detection-algorithms","label":"14. W3 Detection Algorithms"},{"id":"9261216947730534927630538","path":"/15-w3-yolo-algorithm","label":"15. W3 Yolo Algorithm"},{"id":"349317058230271528982284812","path":"/17-w3-assignment-yolo","label":"17. W3 Assignment Yolo"},{"id":"357275719340217929866488581","path":"/18-w3-assignment-u-net","label":"18. W3 Assignment U Net"},{"id":"13148686328064289763697496535","path":"/19-w4-face-recognition","label":"19. W4 Face Recognition"},{"id":"13693829285922894214","path":"/2-w1-ex-cnn-numpy","label":"2. W1 Ex Cnn Numpy"},{"id":"20884562424258556205434814764","path":"/20-w4-one-shot-learning","label":"20. W4 One Shot Learning"},{"id":"588086053203416211890203232","path":"/21-w4-siamese-network","label":"21. W4 Siamese Network"},{"id":"36040492041623211766794889694678019","path":"/22-w4-neural-style-transfer","label":"22. W4 Neural Style Transfer"},{"id":"1703946846511227148400089821026248794712","path":"/23-w4-1d-and-3d-generalizations","label":"23. W4 1d And 3d Generalizations"},{"id":"167378346251","path":"/24-w4-quiz","label":"24. W4 Quiz"},{"id":"81594620876921611320739049591097589785301463","path":"/25-w4-assignment-face-recognition","label":"25. W4 Assignment Face Recognition"},{"id":"63767093682496871561277574795284459949059","path":"/26-w4-assignment-style-transfer","label":"26. W4 Assignment Style Transfer"},{"id":"5281045812406470766250126918655635831428772230","path":"/3-w1-ex-backpropagation-in-cnn-numpy","label":"3. W1 Ex Backpropagation In Cnn Numpy"},{"id":"23170591962560348596","path":"/4-w1-ex-cnn-keras","label":"4. W1 Ex Cnn Keras"},{"id":"27912392340544245011","path":"/5-w2-classic-cnn","label":"5. W2 Classic Cnn"},{"id":"699851653148368","path":"/6-w2-resnets","label":"6. W2 Resnets"},{"id":"2260713679611478557496250968","path":"/7-w2-1x1-convolutions","label":"7. W2 1x1 Convolutions"},{"id":"91703815997744882602618497632","path":"/8-w2-inception-network","label":"8. W2 Inception Network"},{"id":"1301859494802610949","path":"/9-w2-mobilenet","label":"9. W2 Mobilenet"},{"id":"1430021","path":"/u-net","label":"U Net"},{"id":"909553434274288234269563901418288","path":"/1-w1-intro-sequence-models","label":"1. W1 Intro Sequence Models"},{"id":"8155393016006049810006083","path":"/10-w1-assignment-rnn","label":"10. W1 Assignment Rnn"},{"id":"301552809686164194044337706","path":"/11-w1-assignment-lstm","label":"11. W1 Assignment Lstm"},{"id":"18714975067176483348401907730589128","path":"/12-w1-assignment-dinasours","label":"12. W1 Assignment Dinasours"},{"id":"117882784847484889539716776753929470757880463794772293370","path":"/13-w1-assingment-writting-like-shakespeare","label":"13. W1 Assingment Writting Like Shakespeare"},{"id":"918070392148895121583975599358845938218","path":"/14-w1-assignment-jazz-qith-lstm","label":"14. W1 Assignment Jazz Qith Lstm"},{"id":"64892587217002340780547033221777271392","path":"/2-w1-recurrent-neural-network","label":"2. W1 Recurrent Neural Network"},{"id":"52003155095494093361217521138135","path":"/3-w1-sequence-generation","label":"3. W1 Sequence Generation"},{"id":"5122781119522598217052758193044023611845443","path":"/4-w1-vanishing-gradients-with-rnn","label":"4. W1 Vanishing Gradients With Rnn"},{"id":"356146979","path":"/5-w1-grn","label":"5. W1 Grn"},{"id":"14998308394","path":"/6-w1-lstm","label":"6. W1 Lstm"},{"id":"81379854505738342118604899651","path":"/7-w1-bidirectional-rnn","label":"7. W1 Bidirectional Rnn"},{"id":"1170110064315332291","path":"/8-w1-deeper-rnn","label":"8. W1 Deeper Rnn"},{"id":"36160269604446659","path":"/9-w1-quizz-rnn","label":"9. W1 Quizz Rnn"},{"id":"2047359037771105017040952204954811962108096440396","path":"/15-w2-introduction-to-word-embeddings","label":"15. W2 Introduction To Word Embeddings"},{"id":"962997331630488993777029970279529605196","path":"/16-w2-learning-word-embeddings","label":"16. W2 Learning Word Embeddings"},{"id":"5777025671033823341","path":"/17-w2-word2vect","label":"17. W2 Word2vect"},{"id":"3517829073194","path":"/18-w2-glove","label":"18. W2 Glove"},{"id":"37092869215471923760994070018918793862615","path":"/19-w2-sentiment-classification","label":"19. W2 Sentiment Classification"},{"id":"58916203678351507020493545712830028867660","path":"/20-w2-debiasing-word-embeddings","label":"20. W2 Debiasing Word Embeddings"},{"id":"35558555033522579521069689064286284","path":"/21-w2-quizz-word-embeddings","label":"21. W2 Quizz Word Embeddings"},{"id":"46707346624218678034112613636620211880","path":"/22-w2-assignment-word-vectors","label":"22. W2 Assignment Word Vectors"},{"id":"224272424021264635913871547441090653700600010668221032524","path":"/23-w2-assignment-debiasing-wordembeddings","label":"23. W2 Assignment Debiasing Wordembeddings"},{"id":"28550986817598346614574265667934","path":"/24-w2-assignment-emogify","label":"24. W2 Assignment Emogify"},{"id":"1041218379819527396801266796319662","path":"/25-w3-sequence-to-sequence","label":"25. W3 Sequence To Sequence"},{"id":"373817764875668834033","path":"/26-w3-beam-search","label":"26. W3 Beam Search"},{"id":"635828863044447923879078877","path":"/27-w3-attention-model","label":"27. W3 Attention Model"},{"id":"30036693006383918755241215005143","path":"/28-w3-speech-recognition","label":"28. W3 Speech Recognition"},{"id":"85784303056352724112430232141029883819711280","path":"/29-w3-quiz-attention-and-seq-models","label":"29. W3 Quiz Attention And Seq Models"},{"id":"11584672198259687424928073595888806579690486155108684415447","path":"/30-w3-assignment-neural-machine-translation","label":"30. W3 Assignment Neural Machine Translation"},{"id":"1903796256764723839075913943633024983","path":"/31-w3-trigger-word-detection","label":"31. W3 Trigger Word Detection"},{"id":"53364830415218857847205858258711964","path":"/32-w4-transformer-networks","label":"32. W4 Transformer Networks"},{"id":"1154107300265957940535625989960","path":"/33-w4-quiz-transformers","label":"33. W4 Quiz Transformers"},{"id":"198628464994480033556790366109446982955985906693532","path":"/34-w4-assignment-transformer-networks","label":"34. W4 Assignment Transformer Networks"}]}
+          let nodesData = graphData.nodes;
+          let linksData = graphData.edges;
+      
+          // const N = d3.map(nodesData, nodeId).map(intern);
+      
+          const nodeSize = {};
+      
+          const updateNodeSize = () => {
+            nodesData.forEach((el) => {
+              let weight =
+                6 *
+                Math.sqrt(
+                  linksData.filter((l) => l.source === el.id || l.target === el.id)
+                    .length + 1
+                );
+              if (weight < MINIMAL_NODE_SIZE) {
+                weight = MINIMAL_NODE_SIZE;
+              } else if (weight > MAX_NODE_SIZE) {
+                weight = MAX_NODE_SIZE;
+              }
+              nodeSize[el.id] = weight;
+            });
+          };
+      
+          const onClick = (d) => {
+            window.location = d.path
+          };
+      
+          const onMouseover = function (d) {
+            const relatedNodesSet = new Set();
+            linksData
+              .filter((n) => n.target.id == d.id || n.source.id == d.id)
+              .forEach((n) => {
+                relatedNodesSet.add(n.target.id);
+                relatedNodesSet.add(n.source.id);
+              });
+      
+            node.attr("class", (node_d) => {
+              if (node_d.id !== d.id && !relatedNodesSet.has(node_d.id)) {
+                return "inactive";
+              }
+              return "";
+            });
+      
+            link.attr("class", (link_d) => {
+              if (link_d.source.id !== d.id && link_d.target.id !== d.id) {
+                return "inactive";
+              }
+              return "";
+            });
+      
+            link.attr("stroke-width", (link_d) => {
+              if (link_d.source.id === d.id || link_d.target.id === d.id) {
+                return STROKE * 4;
+              }
+              return STROKE;
+            });
+            text.attr("class", (text_d) => {
+              if (text_d.id !== d.id && !relatedNodesSet.has(text_d.id)) {
+                return "inactive";
+              }
+              return "";
+            });
+          };
+      
+          const onMouseout = function (d) {
+            node.attr("class", "");
+            link.attr("class", "");
+            text.attr("class", "");
+            link.attr("stroke-width", STROKE);
+          };
+      
+          const sameNodes = (previous, next) => {
+            if (next.length !== previous.length) {
+              return false;
+            }
+      
+            const map = new Map();
+            for (const node of previous) {
+              map.set(node.id, node.label);
+            }
+      
+            for (const node of next) {
+              const found = map.get(node.id);
+              if (!found || found !== node.title) {
+                return false;
+              }
+            }
+      
+            return true;
+          };
+      
+          const sameEdges = (previous, next) => {
+            if (next.length !== previous.length) {
+              return false;
+            }
+      
+            const set = new Set();
+            for (const edge of previous) {
+              set.add(`${edge.source.id}-${edge.target.id}`);
+            }
+      
+            for (const edge of next) {
+              if (!set.has(`${edge.source}-${edge.target}`)) {
+                return false;
+              }
+            }
+      
+            return true;
+          };
+      
+          const graphWrapper = document.getElementById('graph-wrapper')
+          const element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          element.setAttribute("width", graphWrapper.getBoundingClientRect().width);
+          element.setAttribute("height", window.innerHeight * 0.8);
+          graphWrapper.appendChild(element);
+      
+          const reportWindowSize = () => {
+            element.setAttribute("width", window.innerWidth);
+            element.setAttribute("height", window.innerHeight);
+          };
+      
+          const ticked = () => {
+            node.attr("cx", (d) => d.x)
+                .attr("cy", (d) => d.y);
+            // To positionate text 
+            text
+              .attr("x", (d) => d.x)
+              .attr("y", (d) => d.y)
+              .attr("text-anchor", "start") 
+              .attr("alignment-baseline", "auto")
+            link
+              .attr("x1", (d) => d.source.x)
+              .attr("y1", (d) => d.source.y)
+              .attr("x2", (d) => d.target.x)
+              .attr("y2", (d) => d.target.y);
+          };
+      
+      
+          window.onresize = reportWindowSize;
+      
+          const svg = d3.select("svg"),
+                width = +svg.attr("width"),
+                height = +svg.attr("height"); 
+          let zoomLevel = 0.5; 
+      
+        //   svg.attr("height", height)
+        //       .attr("viewBox", [-width / 2, -height / 2, width, height])
+        //       .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+      
+          // Construct the forces.
+          const forceNode = d3.forceManyBody();
+          const forceLink = d3.forceLink(linksData)
+                              .id((d) => d.id)
+        //   if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
+        //   if (linkStrength !== undefined) forceLink.strength(linkStrength);
+      
+          const simulation = d3.forceSimulation(nodesData)
+            .force("link", forceLink)
+            // .force("forceX", d3.forceX().x(width))
+            // .force("forceY", d3.forceY().y(height))
+            .force("charge", forceNode)
+            .force("center",  d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(10))
+            .on("tick", ticked); 
+      
+          const g = svg.append("g");
+      
+          let link = g.append("g")
+                      .attr("class", "links")
+                      .selectAll("line")
+                      .data(graphData.edges)
+                      .enter().append("line")
+                      .attr("stroke-width", 
+                            function(d) { return Math.sqrt(d.value); });
+      
+          let node = g.append("g")
+                      .attr("class", "nodes")
+                      .selectAll(".node")
+                      .call(drag(simulation));
+                      
+
+          let circles = node.append("circle")
+                         .attr("r", 5)
+                         .attr("fill", '#333');
+
+          let drag_handler = d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended);
+
+            function dragstarted(d) {
+                if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(d) {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            }
+
+            function dragended(d) {
+                if (!d3.event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+          
+          drag_handler(node);
+      
+          let text = g.append("g")
+                      .attr("class", "text")
+                      .selectAll(".text")
+                      .attr("x", 3)
+                      .attr("y", 3)
+      
+          const resize = () => {
+            if (d3.event) {
+              const scale = d3.event.transform;
+              zoomLevel = scale.k;
+              g.attr("transform", scale);
+            }
+      
+            const zoomOrKeep = (value) => (zoomLevel >= 1 ? value / zoomLevel : value);
+      
+            const font = Math.max(Math.round(zoomOrKeep(FONT_SIZE)), 1);
+      
+            text.attr("font-size", (d) => font);
+            text.attr("y", (d) => d.y - zoomOrKeep(FONT_BASELINE) + 8);
+      
+      
+            link.attr("stroke-width", zoomOrKeep(STROKE));
+            node.attr("r", (d) => {
+              return zoomOrKeep(nodeSize[d.id]);
+            });
+            svg
+              .selectAll("circle")
+              .filter((_d, i, nodes) => d3.select(nodes[i]).attr("active"))
+              .attr("r", (d) => zoomOrKeep(ACTIVE_RADIUS_FACTOR * nodeSize[d.id]));
+          };
+      
+      
+      
+          function drag(simulation) {    
+            function dragstarted(event) {
+              if (!event.active) simulation.alphaTarget(0.3).restart();
+              event.subject.fx = event.subject.x;
+              event.subject.fy = event.subject.y;
+            }
+            
+            function dragged(event) {
+              event.subject.fx = event.x;
+              event.subject.fy = event.y;
+            }
+            
+            function dragended(event) {
+              if (!event.active) simulation.alphaTarget(0);
+              event.subject.fx = null;
+              event.subject.fy = null;
+            }
+            
+            return d3.drag()
+              .on("start", dragstarted)
+              .on("drag", dragged)
+              .on("end", dragended);
+          }
+      
+      
+          const restart = () => {
+            updateNodeSize();
+            node = node.data(nodesData, (d) => d.id);
+            node.exit().remove();
+            node = node
+              .enter()
+              .append("circle")
+              .attr("r", (d) => {
+                return nodeSize[d.id];
+              })
+              .on("click", onClick)
+              .on("mouseover", onMouseover)
+              .on("mouseout", onMouseout)
+              .merge(node);
+      
+            link = link.data(linksData, (d) => `${d.source.id}-${d.target.id}`);
+            link.exit().remove();
+            link = link.enter().append("line").attr("stroke-width", STROKE).merge(link);
+      
+            text = text.data(nodesData, (d) => d.label);
+        
+            text.exit().remove();
+            text = text
+              .enter()
+              .append("text")
+              .text((d) => shorten(d.label, MAX_LABEL_LENGTH))
+              .text((d) => capSentence(d.label))
+              .attr("font-size", "12px")
+              .attr("x", (d) => d.x)
+              .attr("y", (d) => d.y)
+            //   .attr("text-anchor", "start") 
+            //   .attr("alignment-baseline", "auto")
+              .on("click", onClick)
+              .on("mouseover", onMouseover)
+              .on("mouseout", onMouseout)
+              .merge(text);
+      
+            node.attr("active", (d) => isCurrentPath(d.path) ? true : null);
+            text.attr("active", (d) => isCurrentPath(d.path) ? true : null);
+      
+            simulation.nodes(nodesData)
+                // .on("tick", ticked);
+            simulation.force("link")
+                .links(linksData);
+            simulation.alpha(1)
+                .restart();
+            simulation.stop();
+      
+            for (let i = 0; i < TICKS; i++) {
+              simulation.tick();
+            }
+      
+            ticked();
+          };
+      
+          const zoomHandler = d3.zoom()
+                .scaleExtent([0.4, 1.5])
+                .on("zoom", resize);
+      
+          zoomHandler(svg);
+          restart();
+      
+      
+          function isCurrentPath(notePath) {
+            return window.location.pathname.includes(notePath)
+          }
+      
+          function capSentence(text) {
+            let wordsArray = text.toLowerCase().split(' ')
+            
+            let capsArray = wordsArray.map( word=>{
+                return  word.replace(word[0], word[0].toUpperCase())
+            })
+            
+            return capsArray.join(' ')
+          }
+      
+          // To regulate the length of the node titles
+          function shorten(str, maxLen, separator = ' ') {
+            if (str.length <= maxLen) return str;
+            return str.substr(0, str.lastIndexOf(separator, maxLen)) + '...';
+          }
+        </script>
+      </div>
+      
+</body>

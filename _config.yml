@@ -55,7 +55,6 @@ defaults:
       layout: "default"
   - scope:
       path: "_notes/**/*.md"
-      # Commented for fast rendering
     values:
       layout: "note"
 

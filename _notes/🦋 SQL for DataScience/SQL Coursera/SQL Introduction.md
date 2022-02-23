@@ -54,3 +54,53 @@
 - The main thing for using SQL
 	- Data retrieval
 
+### Thinking about your data
+
+> 🧠 Think before you do!!
+
+#### Understand your data
+- Understand the business process or subject matter the data is modeled after
+- Know the business rules
+- Understand how your data is organized and structured in the table
+
+#### WHy this is worthwhile
+- Get more accurate results
+- Speed up your work
+- Have less rework
+
+### Databases and Tables
+
+- **Database**:
+	- A ==container== to store organized data
+	- A set of related information
+- **Tables**:
+	- A structured list of data elements or a specific type
+	- *Columns*:
+		- A single field in a table
+	- *Rows*:
+		- A record in a table
+
+### The evolution of data modeling
+- ==Data modeling==:
+	- Organizes and **structures information** into multiple, related tables
+	- Can represent a business process or show relationships between business processes
+	- Should closely represent real world
+
+#### Types of Data models
+1. Models for prediction build by data scientists
+2. Data model as data tables represetned and organized in a database
+
+#### The evolution of data models
+1.  Hierarchical
+2.  Network
+3.  Relational:
+	- Simplifies the connections between the data 
+	- Easily allows to write queries, retrieve info, update, and write data
+4.  Entity Relationship
+5.  Semantic
+6.  Object-Oriented
+7.  Extended Relational
+8.  NoSql
+	- BigData =>
+
+![[Captura de Pantalla 2022-02-19 a la(s) 9.13.24.png]]
