@@ -10,12 +10,41 @@
 
 ## Default CNN model
 
-- Clear the `backend`
+- Import #TensorFlow  and clear the `backend`
 
 ```python
+import tensorflow as tf
 tf.keras.backend.clear_session()
 ```
 
+- Import the `dataset`
+
+```python
+# Load the dataset
+mnist = tf.keras.datasets.fashion_mnist
+
+# Get the training and test sets
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
+
+# Create the text labels
+y_labels = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+			'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+
+
+# Normalize the images
+X_train = X_train / 255.0
+X_test = X_test / 255.
+```
+
+- 🚨 ==Important== 🚨: 
+	- Add an **extra dimension** to add an empty color channel
+
+```python
+X_train = np.expand_dims(X_train, -1)
+X_test  = np.expand_dims(X_test, -1)
+```
+
+#### Define the model
 - A CNN for multiclass classification:
 	- 3 convolutional layers
 		- Each layer is followed by a `MaxPool2D` layer
@@ -27,14 +56,15 @@ tf.keras.backend.clear_session()
 ```python
 N_CLASSES = 10
 
-# NOTE: mnist fashion has only one channel
-WIDTH, HEIGHT, N_CHANNELS =  np.expand_dims(X_train[0], axis = -1).shape
+# NOTE: mnist fashion has only one channel, 
+# therefore that axis is not used
+WIDTH, HEIGHT, N_CHANNELS =  X_train[0].shape
 
 model = tf.keras.models.Sequential(
 	name = 'Basic_CNN_model',
 	layers = [
 	# Define the Input layer
-	tf.keras.layers.Input(shape = (WIDTH, HEIGHT, N_CHANNELS)),
+	tf.keras.layers.Input(shape = (WIDTH, HEIGHT)),
 	# Define the first Conv layer
 	tf.keras.layers.Conv2D(
 		filters     = 64, 
@@ -138,12 +168,39 @@ model.compile(
 #### Fit the model
 
 ```python
-# Train the model for 50 epochs
+# Convert to float32
+X_train = X_train.astype(np.float32)
+X_test  = X_test.astype(np.float32)
+
+# Train the model
 model.fit(
-	X_train, y_train, epochs = 50, batch_size = 32
+    X_train, 
+    y_train, 
+    validation_data = (X_test, y_test),
+    epochs = 20, 
+    batch_size = 32
 )
 ```
 
+#### Make an individual prediction
+- 🔥 We need to adapt the shape of the individual image using `np.newaxis`
+
+```python
+X_test[0][np.newaxis].shape
+```
+```
+(1, 28, 28)
+```
+
+- Also, ==remember== that we expanded the dimensions of the images
+
+```python
+# Test the model
+model.predict(X_test_dims[0][np.newaxis])
+```
+
+### Continue visualizing convolutions
+- [[f. ⭐️ Visualizing Convolutions]]
 
 ## Related notes
 - [[1. W1 - CNN]]
