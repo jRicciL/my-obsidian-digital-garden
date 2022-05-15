@@ -4,7 +4,7 @@
 # Decision Trees
 
 > Related notes: 
-> - [[ML_with_Spark#Decision Tree]]
+> - [[C5. ML with Spark#Decision Tree]]
 
 ***
 

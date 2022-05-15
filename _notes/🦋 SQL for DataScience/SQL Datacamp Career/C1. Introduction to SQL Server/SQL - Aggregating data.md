@@ -116,3 +116,44 @@ SELECT
 	REPLACE(column, '__', '-') AS edited_column
 FROM table_name
 ```
+
+## Grouping and Having
+
+### `GROUP BY`
+- `GROUP BY` splits the data up into combinations of one or more values
+
+```sql
+SELECT
+	SUM(demand_loss_mw) AS lost_demand,
+	description
+FROM grid
+GROUP BY description
+```
+
+- A more detailed query
+
+```sql
+SELECT
+	SUM(demand_loss_mw) AS lost_demand,
+	description
+FROM grid
+WHERE
+	description LIKE '%storm'
+	AND demand_loss_mw IS NOT NULL
+GROUP BY description
+```
+
+### `HAVING`
+- `HAVING` appears after the `GROUP BY` clause and filters on groups of aggregates
+
+```sql
+SELECT
+	SUM(demand_loss) AS lost_demand,
+	description
+FROM grid
+WHERE 
+	description LIKE '%storm'
+	AND demand_loss IS NOT NULL
+GROUP BY descripion
+HAVING SUM(demand_loss_mw) > 1000
+```

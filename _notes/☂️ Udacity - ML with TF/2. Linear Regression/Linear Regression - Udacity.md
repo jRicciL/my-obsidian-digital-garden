@@ -328,7 +328,7 @@ laos_life_exp = bmi_life_model.predict(21.07931)
 
 # Regularization
 Related notes: 
-> [[Regularization]], [[ML_with_Spark#Regularization]], [[Optimization Formulation]]
+> [[Regularization]], [[C5. ML with Spark#Regularization]], [[Optimization Formulation]]
 
 ### Model complexity
 
