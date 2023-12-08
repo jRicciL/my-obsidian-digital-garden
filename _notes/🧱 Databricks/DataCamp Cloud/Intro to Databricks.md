@@ -374,3 +374,179 @@ Differences with other Warehouses
 - Lightweight, in-platform visualizations
 - Support for standard visual types
 - Ability to quickly comprehend data in a graphical way
+
+# C3 - Large scale applications and Machine Learning
+
+### Why the Lakehouse for AI / ML?
+- Reliable data and files in the Delta lake
+- Highly scalable computing
+- Open standards, libraries, frameworks
+- Unification with other data teams
+## MLOps  in the Lakehouse
+#MLOps
+
+![[Captura de Pantalla 2023-11-29 a la(s) 19.32.34.png]]
+### DataOps
+- Integrating data across different sourses using #AutoLoader → [[AutoLoader Databricks]]
+- Transforming data into a usable, clean format → #DeltaLiveTables  → [[Delta Live Tables]]
+- Creating useful features for models → #FeatureStore
+![[Captura de Pantalla 2023-11-29 a la(s) 19.40.02.png]]
+### ModelOps
+- Develop and train different models → Databricks Notebooks
+- Machine learning templates and automation → Generate a baseline model → #AutoML
+- Track parameters, metrics, and trials → #MLFlow framework
+- Centralize and consume models → #ModelRegistry
+![[Captura de Pantalla 2023-11-29 a la(s) 19.40.12.png]]
+### DevOps → Production
+- Govern access to different models → #UnityCatalog
+- Continuos Integration and Continuos Deployment (CI/CD) for model versions → #ModelRegistry 
+- Deploy models for consumption → #ServingEndpoints
+![[Captura de Pantalla 2023-11-29 a la(s) 19.40.25.png]]
+## Planing for Machine Learning
+
+![[Captura de Pantalla 2023-11-29 a la(s) 19.43.15.png]]
+- What do we have?
+	- Data availability
+	- Business requirements
+	- Data scientists / Data analysts 
+- What do I want?
+	- Use cases
+	- Legal and security compliance
+	- Business outcomes
+
+## ML Runtime
+- Extension of Databricks compute
+- Optimized for machine learning applications
+- Contains most common libraries and frameworks
+	- `scikit-learn` `SaparkML` `TensorFlow`
+	- `MLFlow`
+- Works with cluster library management
+
+## Exploratory Data Analysis
+#EDA #ExploratoryDataAnalysis #python 
+```python
+import bmboolib as bam
+# For UI exploratory data analysis
+```
+
+## Feature tables and feature stores
+![[Captura de Pantalla 2023-11-29 a la(s) 19.54.12.png]]
+### Databricks Feature Store
+
+- Centralized storage for featurized datasets
+- Easily discover and reuse features for machine learning models
+- Upstream and downstream lineage
+
+Using the feature store
+```python
+from databrikcs import feature_store
+
+
+df = spark.read.table("review_data")
+dbutils.data.summarize(df)
+
+feature_df = (
+	df.withColumn('feature1', ...)
+	  .withColumn('feature2', ...)
+)
+
+
+fs = feature_store.FeatureStoreClient()
+
+fs.create_table(
+	name = table_name,
+	primary_keys = ['wine_id'],
+	df = features_df,
+	schema = features_df.schema,
+	description = "wine features"
+)
+```
+
+## Model Traning with AutoML and MLFlow in Databricks
+Model Develpment and Model Evaluation
+#AutoML #MLFlow 
+
+### AutoML
+- Glass box approach to automated machine learning
+	- Great for “Citizen data scientist”
+- Uses the most popular libraries
+- Can create a model that best predicts what you are aiming to predict 
+- UI based
+- Provides notebook with generated code to reproduce the model
+
+### MLFlow
+- Open source framework
+- Ent-to-end machine learning lifecycle management
+- Track, evaluate, manage, and deploy
+- Preinstalled on ML Runtime
+
+Procedure:
+- Define an experiment
+- Start the machine learning run
+- Compare your model runs in the MLFlow experiment
+- Select the model from the best run
+
+```python
+import mlflow
+
+# Start the machine learning run
+with mlflow.start_run() as run:
+	# Machine leraning training
+
+# Train your model and track your information
+mlflow.autolog()
+mlflow.log_metric('accuracy', acc)
+mlflow.lot_param('k', kNum)
+```
+
+### MLFlow Experiments
+- Collect information across multiple runs in a single location
+- Sort and compare model runs → Based on different metrics
+
+## Deploying a model in Databricks
+- Get sure that high quality models get into production
+![[Pasted image 20231130073606.png]]
+
+Concerns with deploying models:
+1. **==Availability==**
+	- How will the ML model be used?
+	- Where do I need to put my model to access it?
+	- Will the model be easy to understand or use?
+2. **==Evaluation==**
+	- Are my users actually using my model?
+	- Is my model still performing well?
+	- Do I need to retrain my model?
+	- Do I need a new model that is better?
+
+### Model Flavors → Model Registry
+#ModelFlavors
+
+**Model Falvors**
+- MLFLow Models can store a model from any machine learning framework
+- Models are stored alongside different configurations and artifacts
+- Models can be “translated” into another kind of model based on needs.
+	- Different ==flavors==:
+		- `scikit-learn`
+		- `pyfunc`
+		- `spark`
+		- `tensorflow`
+
+**Model Registry:**
+- Is a collection of all models we have train
+- Including previous versions of these models → Version History
+	- Easily see current and past version of the same model
+- From here we can push a model into a **production** or **staging**
+
+### Model Serving → Deployment 🚀
+- From local models to docker containers
+- Model Serving comes with a dashboard to measure performance
+- Advantages:
+	- Simplify the overhead of managing compute resources and provide built-in capabilities for model monitoring.
+
+## Simple End-to-end ML pipeline
+1. Transform datasets, create features, and store them in the Feature Store
+2. Train your model using the SparkML library
+3. Test out your model against another dataset and track the results with MLFlow
+4. Store your trained and tested model in the Model Registry
+5. Server your model with a Databricks serving endpoint for your end users to consume
+
