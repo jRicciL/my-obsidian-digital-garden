@@ -5,7 +5,7 @@
 Real hackers use a specific lifecypcle
 
 1. Goal-Target:
-    1. Understand what you are assesing it’s security
+    1. Understand what you are assessing it’s security
 2. Learn it:
     1. Learn as much as you can about it.
 3. Explore it → Reconocense
